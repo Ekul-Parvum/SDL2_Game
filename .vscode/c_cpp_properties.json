@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:\\MSYS2\\ucrt64\\include\\SDL2\\SDL.h",
+                "C:\\MSYS2\\ucrt64\\include\\SDL2\\SDL_image.h",
+                "C:\\MSYS2\\ucrt64\\include\\SDL2\\SDL_ttf.h"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.26100.0",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-msvc-x64"
+        }
+    ],
+    "version": 4
+}
