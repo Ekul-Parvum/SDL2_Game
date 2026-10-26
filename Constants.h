@@ -12,12 +12,23 @@
 
 namespace Constants {
     // These are only used when creating the window - it is resizable after.
-    const int SCREEN_WIDTH = 640; 
-    const int SCREEN_HEIGHT = 480;
+    constexpr int SCREEN_WIDTH = 640; 
+    constexpr int SCREEN_HEIGHT = 480;
 
-    Ekul::Window gWindow;
+    inline Ekul::Window gWindow;
 
-    SDL_Renderer* gRenderer = NULL;
+    inline SDL_Renderer* gRenderer = NULL;
+
+    namespace FilePaths {
+        // File paths to the images I care about:
+        inline std::string derpySmilePath =                    "media/Pictures/DerpySmile_x32scale.png";
+        // std::string smilingStarsPath =                  "media/Pictures/SmilingStars_x32scale.bmp";
+        // std::string expressionlessSpriteMap =           "media/Pictures/ExpressionlessSpriteMap.png";
+        // std::string expressionlessSpriteMap_x32scale =  "media/Pictures/ExpressionlessSpriteMap_x32scale.png";
+        // std::string soundPrompt =                       "media/Pictures/soundPrompt.png";
+        // std::string dotBMP =                            "media/Pictures/dot.bmp";
+        // std::string bgBackground =                      "media/Pictures/bg.png";
+    }
 }
 
 #endif
