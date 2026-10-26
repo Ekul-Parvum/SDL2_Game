@@ -9,6 +9,7 @@
 
 // My Stuff
 #include "Window.h"
+#include "GameObject.h"
 
 bool initSDL2();
 
@@ -19,6 +20,8 @@ const int SCREEN_HEIGHT = 480;
 Ekul::Window gWindow;
 
 SDL_Renderer* gRenderer = NULL;
+
+Ekul::GameObject gameObject = Ekul::GameObject();
 
 int main(int argc, char* args[]) 
 {
@@ -66,6 +69,7 @@ int main(int argc, char* args[])
     return 0;
 }
 
+#pragma region functions
 bool initSDL2()
 {
      // Initialization flag
@@ -121,3 +125,4 @@ bool initSDL2()
     return success;
 }
 
+#pragma endregion
