@@ -58,7 +58,9 @@ int main(int argc, char* args[])
                 SDL_SetRenderDrawColor( gRenderer, 0xAA, 0xAA, 0xAA, 0xAA );
                 SDL_RenderClear(gRenderer);
 
-                // REnder:
+                // Render:
+                SDL_SetRenderDrawColor( gRenderer, 0xCC, 0x55, 0x55, 0x55 );
+                SDL_RenderFillRect(gRenderer, gameObject.getPhysicsObject());
 
                 // Present to window:
                 SDL_RenderPresent(gRenderer);
