@@ -7,13 +7,6 @@ GameObject::GameObject()
     mTexture = NULL;
     mWidth = 0;
     mHeight = 0;
-
-    textureRect = {
-        0, // x
-        0, // y
-        0, // w
-        0 // h
-    };
 }
 
 GameObject::~GameObject()
