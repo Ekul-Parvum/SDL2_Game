@@ -46,9 +46,16 @@ namespace Ekul {
         int getWidth();
         int getHeight();
 
+        //Changes image dimensions while keeping aspect ratio:
+        void setWidth(int width);
+        void setHeight(int height);
+
         private:
         //The actual hardware texture
         SDL_Texture* mTexture;
+
+        // The rect to set the scale of the image when rendered.
+        SDL_Rect textureRect;
 
         //Image dimensions
         int mWidth;

@@ -7,6 +7,13 @@ GameObject::GameObject()
     mTexture = NULL;
     mWidth = 0;
     mHeight = 0;
+
+    textureRect = {
+        0, // x
+        0, // y
+        0, // w
+        0 // h
+    };
 }
 
 GameObject::~GameObject()
@@ -145,7 +152,19 @@ int GameObject::getWidth()
     return mWidth;
 }
 
+void GameObject::setWidth(int width)
+{
+    mHeight = mHeight * ((float)width/(float)mWidth);
+    mWidth = width;
+}
+
 int GameObject::getHeight()
 {
     return mHeight;
+}
+
+void GameObject::setHeight(int height)
+{
+    mWidth = mWidth * ((float)height/(float)mHeight);
+    mHeight = height;
 }

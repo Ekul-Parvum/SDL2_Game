@@ -38,6 +38,8 @@ int main(int argc, char* args[])
 
             // TODO: Add fps controll
 
+            gameObject.setHeight(200);
+
             while (!quit)
             {
                 // Handle events on queue:
