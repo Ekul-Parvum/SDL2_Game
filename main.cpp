@@ -1,3 +1,9 @@
+/*
+Author: Me
+Purpose: Learn SDL2, and make a cool thing
+Description: Trying to make a simple 2d game
+*/
+
 // SDL2
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
