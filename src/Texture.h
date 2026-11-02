@@ -11,13 +11,13 @@
 #include <string>
 
 namespace Ekul {
-    class GameObject {
+    class Texture {
         public:
         //Initializes variables
-        GameObject();
+        Texture();
 
         //Deallocates memory
-        ~GameObject();
+        ~Texture();
 
         //Loads image at specified path
         bool loadFromFile(SDL_Renderer* renderer, std::string path);

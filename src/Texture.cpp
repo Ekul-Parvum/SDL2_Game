@@ -1,8 +1,8 @@
-#include "GameObject.h"
+#include "Texture.h"
 
 using namespace Ekul;
 
-GameObject::GameObject()
+Texture::Texture()
 {
     mTexture = NULL;
     mWidth = 0;
@@ -10,13 +10,13 @@ GameObject::GameObject()
     mClip = {0, 0, 0, 0};
 }
 
-GameObject::~GameObject()
+Texture::~Texture()
 {
     // Just dealocate stuff
     free();
 }
 
-bool GameObject::loadFromFile(SDL_Renderer* renderer, std::string path)
+bool Texture::loadFromFile(SDL_Renderer* renderer, std::string path)
 {
     // Get rid of pre-existing texture.
     free();
@@ -56,7 +56,7 @@ bool GameObject::loadFromFile(SDL_Renderer* renderer, std::string path)
 }
 
 #if defined(SDL_TTF_MAJOR_VERSION)
-bool GameObject::loadFromRenderedText(SDL_Renderer* renderer, TTF_Font* font, std::string text, SDL_Color textColor) 
+bool Texture::loadFromRenderedText(SDL_Renderer* renderer, TTF_Font* font, std::string text, SDL_Color textColor) 
 {
     // If there was anything in this texture before, we need to get rid of it to load this new text texture
     free();
@@ -89,7 +89,7 @@ bool GameObject::loadFromRenderedText(SDL_Renderer* renderer, TTF_Font* font, st
 }
 #endif
 
-void GameObject::free()
+void Texture::free()
 {
     if (mTexture != NULL)
     {
@@ -100,7 +100,7 @@ void GameObject::free()
     }
 }
 
-void GameObject::setColor( Uint8 red, Uint8 green, Uint8 blue )
+void Texture::setColor( Uint8 red, Uint8 green, Uint8 blue )
 {
     //Modulate texture
     /*
@@ -115,17 +115,17 @@ void GameObject::setColor( Uint8 red, Uint8 green, Uint8 blue )
     SDL_SetTextureColorMod( mTexture, red, green, blue );
 }
 
-void GameObject::setBlendMode(SDL_BlendMode blending)
+void Texture::setBlendMode(SDL_BlendMode blending)
 {
     SDL_SetTextureBlendMode(mTexture, blending);
 }
 
-void GameObject::setAlpha(Uint8 alpha)
+void Texture::setAlpha(Uint8 alpha)
 {
     SDL_SetTextureAlphaMod(mTexture, alpha);
 }
 
-void GameObject::render(SDL_Renderer* renderer, int x, int y, double angle, SDL_Point* center, SDL_RendererFlip flip)
+void Texture::render(SDL_Renderer* renderer, int x, int y, double angle, SDL_Point* center, SDL_RendererFlip flip)
 {
     // The portion of the screen/renderer that this texture will take up
     SDL_Rect renderQuad = {x, y, mWidth, mHeight};
@@ -145,44 +145,44 @@ void GameObject::render(SDL_Renderer* renderer, int x, int y, double angle, SDL_
     SDL_RenderCopyEx(renderer, mTexture, tempClip, &renderQuad, angle, center, flip);
 }
 
-SDL_Rect GameObject::getClip()
+SDL_Rect Texture::getClip()
 {
     return mClip;
 }
 
-void GameObject::setClip(SDL_Rect clip)
+void Texture::setClip(SDL_Rect clip)
 {
     mClip = clip;
 }
 
-int GameObject::getWidth()
+int Texture::getWidth()
 {
     return mWidth;
 }
 
-void GameObject::setWidth(int width)
+void Texture::setWidth(int width)
 {
     mHeight = mHeight * ((float)width/(float)mWidth);
     mWidth = width;
 }
 
-void GameObject::forceSetWidth(int width)
+void Texture::forceSetWidth(int width)
 {
     mWidth = width;
 }
 
-int GameObject::getHeight()
+int Texture::getHeight()
 {
     return mHeight;
 }
 
-void GameObject::setHeight(int height)
+void Texture::setHeight(int height)
 {
     mWidth = mWidth * ((float)height/(float)mHeight);
     mHeight = height;
 }
 
-void GameObject::forceSetHeight(int height)
+void Texture::forceSetHeight(int height)
 {
     mHeight = height;
 }

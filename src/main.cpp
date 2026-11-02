@@ -16,14 +16,14 @@ Description: Trying to make a simple 2d game
 // My Stuff
 #include "Global.h"
 #include "Window.h"
-#include "GameObject.h"
+#include "Texture.h"
 #include "PhysicsObject.h"
 
 bool initSDL2();
 bool loadMedia();
 void close();
 
-Ekul::GameObject gameObject = Ekul::GameObject();
+Ekul::Texture texture = Ekul::Texture();
 Ekul::PhysicsObject physicsObject = Ekul::PhysicsObject(0, 0, 100, 200, 0.0);
 
 int main(int argc, char* args[]) 
@@ -46,8 +46,8 @@ int main(int argc, char* args[])
 
             // TODO: Add fps controll
 
-            gameObject.forceSetHeight(physicsObject.getHeight());
-            gameObject.forceSetWidth(physicsObject.getWidth());
+            texture.forceSetHeight(physicsObject.getHeight());
+            texture.forceSetWidth(physicsObject.getWidth());
 
             while (!quit)
             {
@@ -92,7 +92,7 @@ int main(int argc, char* args[])
 
                     // Render:
                     SDL_Point objPos = physicsObject.getCenterPos();
-                    gameObject.render(Global::gRenderer, objPos.x - gameObject.getWidth() / 2, objPos.y - gameObject.getHeight() / 2);
+                    texture.render(Global::gRenderer, objPos.x - texture.getWidth() / 2, objPos.y - texture.getHeight() / 2);
 
                     // Present to window:
                     SDL_RenderPresent(Global::gRenderer);
@@ -167,7 +167,7 @@ bool loadMedia()
     bool success = true;
 
     // Load texture with string in that font
-    if (!gameObject.loadFromFile(Global::gRenderer, Constants::FilePaths::plainColor))
+    if (!texture.loadFromFile(Global::gRenderer, Constants::FilePaths::plainColor))
     {
         printf("[Line %d] Couldn't load text to texture\n", __LINE__);
         success = false;
@@ -175,7 +175,7 @@ bool loadMedia()
     else
     {
 
-        gameObject.setClip({0, 0, 1, 1});
+        texture.setClip({0, 0, 1, 1});
     }
 
     return success;
@@ -184,7 +184,7 @@ bool loadMedia()
 void close()
 {
     // Free textures
-    gameObject.free();
+    texture.free();
 
     SDL_DestroyRenderer( Global::gRenderer );
     Global::gWindow.free();
