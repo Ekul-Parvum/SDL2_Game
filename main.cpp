@@ -44,7 +44,8 @@ int main(int argc, char* args[])
 
             // TODO: Add fps controll
 
-            gameObject.setHeight(200);
+            gameObject.forceSetHeight(200);
+            gameObject.forceSetWidth(200);
 
             while (!quit)
             {
@@ -143,10 +144,15 @@ bool loadMedia()
     bool success = true;
 
     // Load texture with string in that font
-    if (!gameObject.loadFromFile(Constants::gRenderer, Constants::FilePaths::derpySmilePath))
+    if (!gameObject.loadFromFile(Constants::gRenderer, Constants::FilePaths::plainColor))
     {
         printf("[Line %d] Couldn't load text to texture\n", __LINE__);
         success = false;
+    }
+    else
+    {
+
+        gameObject.setClip({0, 0, 1, 1});
     }
 
     return success;

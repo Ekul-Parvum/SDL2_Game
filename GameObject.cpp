@@ -7,6 +7,7 @@ GameObject::GameObject()
     mTexture = NULL;
     mWidth = 0;
     mHeight = 0;
+    mClip = {0, 0, 0, 0};
 }
 
 GameObject::~GameObject()
@@ -124,20 +125,34 @@ void GameObject::setAlpha(Uint8 alpha)
     SDL_SetTextureAlphaMod(mTexture, alpha);
 }
 
-void GameObject::render(SDL_Renderer* renderer, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
+void GameObject::render(SDL_Renderer* renderer, int x, int y, double angle, SDL_Point* center, SDL_RendererFlip flip)
 {
     // The portion of the screen/renderer that this texture will take up
     SDL_Rect renderQuad = {x, y, mWidth, mHeight};
 
+    // Clip to render
+    SDL_Rect* tempClip = NULL;
+
     // So if we are rendering only a clip of the texture, then we need to change renderQuad to match the clip's dimensions
-    if (clip != NULL)
+    if (mClip.w != 0 && mClip.h != 0)
     {
-        renderQuad.w = clip->w;
-        renderQuad.h = clip->h;
+        // renderQuad.w = mClip.w;
+        // renderQuad.h = mClip.h;
+        tempClip = &mClip;
     }
 
     // Put it to the screen!
-    SDL_RenderCopyEx(renderer, mTexture, clip, &renderQuad, angle, center, flip);
+    SDL_RenderCopyEx(renderer, mTexture, tempClip, &renderQuad, angle, center, flip);
+}
+
+SDL_Rect GameObject::getClip()
+{
+    return mClip;
+}
+
+void GameObject::setClip(SDL_Rect clip)
+{
+    mClip = clip;
 }
 
 int GameObject::getWidth()
@@ -151,6 +166,11 @@ void GameObject::setWidth(int width)
     mWidth = width;
 }
 
+void GameObject::forceSetWidth(int width)
+{
+    mWidth = width;
+}
+
 int GameObject::getHeight()
 {
     return mHeight;
@@ -159,5 +179,10 @@ int GameObject::getHeight()
 void GameObject::setHeight(int height)
 {
     mWidth = mWidth * ((float)height/(float)mHeight);
+    mHeight = height;
+}
+
+void GameObject::forceSetHeight(int height)
+{
     mHeight = height;
 }
