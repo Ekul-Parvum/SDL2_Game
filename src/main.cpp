@@ -17,12 +17,14 @@ Description: Trying to make a simple 2d game
 #include "Global.h"
 #include "Window.h"
 #include "GameObject.h"
+#include "PhysicsObject.h"
 
 bool initSDL2();
 bool loadMedia();
 void close();
 
 Ekul::GameObject gameObject = Ekul::GameObject();
+Ekul::PhysicsObject physicsObject = Ekul::PhysicsObject(0, 0, 100, 200, 0.0);
 
 int main(int argc, char* args[]) 
 {
@@ -44,8 +46,8 @@ int main(int argc, char* args[])
 
             // TODO: Add fps controll
 
-            gameObject.forceSetHeight(200);
-            gameObject.forceSetWidth(200);
+            gameObject.forceSetHeight(physicsObject.getHeight());
+            gameObject.forceSetWidth(physicsObject.getWidth());
 
             while (!quit)
             {
@@ -61,7 +63,27 @@ int main(int argc, char* args[])
                     // Handle window events
                     Global::gWindow.handleEvent(event);
                 }
-                
+
+                // User input
+                const Uint8* currentKeyStates = SDL_GetKeyboardState( NULL );
+                const int speed = 10;
+                if (currentKeyStates[ SDL_SCANCODE_LEFT ])
+                {
+                    physicsObject.moveCenterPos(-speed, 0);
+                }
+                if (currentKeyStates[ SDL_SCANCODE_RIGHT ])
+                {
+                    physicsObject.moveCenterPos(speed, 0);
+                }
+                if (currentKeyStates[ SDL_SCANCODE_UP ])
+                {
+                    physicsObject.moveCenterPos(0, -speed);
+                }
+                if (currentKeyStates[ SDL_SCANCODE_DOWN ])
+                {
+                    physicsObject.moveCenterPos(0, speed);
+                }
+
                 if (!Global::gWindow.isMinimized())
                 {
                     // Clear Screen
@@ -69,7 +91,8 @@ int main(int argc, char* args[])
                     SDL_RenderClear(Global::gRenderer);
 
                     // Render:
-                    gameObject.render(Global::gRenderer, (Global::gWindow.getWidth() - gameObject.getWidth() ) / 2, ( Global::gWindow.getHeight() - gameObject.getHeight() ) / 2 );
+                    SDL_Point objPos = physicsObject.getCenterPos();
+                    gameObject.render(Global::gRenderer, objPos.x - gameObject.getWidth() / 2, objPos.y - gameObject.getHeight() / 2);
 
                     // Present to window:
                     SDL_RenderPresent(Global::gRenderer);
