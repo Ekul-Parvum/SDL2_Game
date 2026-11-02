@@ -14,7 +14,7 @@ Description: Trying to make a simple 2d game
 #include <sstream>
 
 // My Stuff
-#include "Constants.h"
+#include "Global.h"
 #include "Window.h"
 #include "GameObject.h"
 
@@ -59,20 +59,20 @@ int main(int argc, char* args[])
                     }
 
                     // Handle window events
-                    Constants::gWindow.handleEvent(event);
+                    Global::gWindow.handleEvent(event);
                 }
                 
-                if (!Constants::gWindow.isMinimized())
+                if (!Global::gWindow.isMinimized())
                 {
                     // Clear Screen
-                    SDL_SetRenderDrawColor( Constants::gRenderer, 0xAA, 0xAA, 0xAA, 0xAA );
-                    SDL_RenderClear(Constants::gRenderer);
+                    SDL_SetRenderDrawColor( Global::gRenderer, 0xAA, 0xAA, 0xAA, 0xAA );
+                    SDL_RenderClear(Global::gRenderer);
 
                     // Render:
-                    gameObject.render(Constants::gRenderer, (Constants::gWindow.getWidth() - gameObject.getWidth() ) / 2, ( Constants::gWindow.getHeight() - gameObject.getHeight() ) / 2 );
+                    gameObject.render(Global::gRenderer, (Global::gWindow.getWidth() - gameObject.getWidth() ) / 2, ( Global::gWindow.getHeight() - gameObject.getHeight() ) / 2 );
 
                     // Present to window:
-                    SDL_RenderPresent(Constants::gRenderer);
+                    SDL_RenderPresent(Global::gRenderer);
                 }
             }
         }
@@ -98,7 +98,7 @@ bool initSDL2()
      else
     {
         //Create window
-        if(!Constants::gWindow.init())
+        if(!Global::gWindow.init())
         {
             printf("[Line %d] Window could not be created! SDL_Error: %s\n", __LINE__, SDL_GetError());
             success = false;
@@ -106,8 +106,8 @@ bool initSDL2()
         else
         {
             // Create Renderer:
-            Constants::gRenderer = Constants::gWindow.createRenderer();
-            if (Constants::gRenderer == NULL)
+            Global::gRenderer = Global::gWindow.createRenderer();
+            if (Global::gRenderer == NULL)
             {
                 printf("[Line %d] Renderer could not be created! SDL_Error: %s\n", __LINE__, SDL_GetError());
                 success = false;
@@ -116,7 +116,7 @@ bool initSDL2()
             {
                 // Init Renderer color
                 Uint8 greyScaleNumber = 0xAA;
-                SDL_SetRenderDrawColor(Constants::gRenderer, greyScaleNumber, greyScaleNumber, greyScaleNumber, greyScaleNumber);
+                SDL_SetRenderDrawColor(Global::gRenderer, greyScaleNumber, greyScaleNumber, greyScaleNumber, greyScaleNumber);
             }
         }
     }
@@ -144,7 +144,7 @@ bool loadMedia()
     bool success = true;
 
     // Load texture with string in that font
-    if (!gameObject.loadFromFile(Constants::gRenderer, Constants::FilePaths::plainColor))
+    if (!gameObject.loadFromFile(Global::gRenderer, Constants::FilePaths::plainColor))
     {
         printf("[Line %d] Couldn't load text to texture\n", __LINE__);
         success = false;
@@ -163,8 +163,8 @@ void close()
     // Free textures
     gameObject.free();
 
-    SDL_DestroyRenderer( Constants::gRenderer );
-    Constants::gWindow.free();
+    SDL_DestroyRenderer( Global::gRenderer );
+    Global::gWindow.free();
     
     //Quit SDL subsystems
     TTF_Quit();

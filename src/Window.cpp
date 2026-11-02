@@ -1,6 +1,6 @@
 #include "./Window.h"
 
-#include "./Constants.h"
+#include "./Global.h"
 
 using namespace Ekul;
 
@@ -50,12 +50,12 @@ void Window::handleEvent( SDL_Event& e )
             case SDL_WINDOWEVENT_SIZE_CHANGED:
             mWidth = e.window.data1;
             mHeight = e.window.data2;
-            SDL_RenderPresent( Constants::gRenderer );
+            SDL_RenderPresent( Global::gRenderer );
             break;
 
             //Repaint on exposure
             case SDL_WINDOWEVENT_EXPOSED:
-            SDL_RenderPresent( Constants::gRenderer );
+            SDL_RenderPresent( Global::gRenderer );
             break;
 
             //Mouse entered window

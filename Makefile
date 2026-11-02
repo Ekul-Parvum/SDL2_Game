@@ -8,19 +8,19 @@ all: test
 
 # -- -- -- --[ Linking everything together ]-- -- -- --
 test: main.o window.o gameobject.o
-	$(CXX) main.o window.o gameobject.o $(LDLIBS) -o test.exe
+	$(CXX) ./bin/main.o ./bin/window.o ./bin/gameobject.o $(LDLIBS) -o ./test.exe
 # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 # -/- -/- -/- -/-[  Making Object Files  ]-\- -\- -\- -\-
-main.o: main.cpp Constants.h GameObject.h Window.h
-	$(CXX) $(CXXFLAGS) -c main.cpp -o main.o
+main.o: ./src/main.cpp ./src/Global.h ./src/GameObject.h ./src/Window.h
+	$(CXX) $(CXXFLAGS) -c ./src/main.cpp -o ./bin/main.o
 
-window.o: Window.cpp Window.h Constants.h
-	$(CXX) $(CXXFLAGS) -c Window.cpp -o window.o
+window.o: ./src/Window.cpp ./src/Window.h ./src/Global.h
+	$(CXX) $(CXXFLAGS) -c ./src/Window.cpp -o ./bin/window.o
 
-gameobject.o: GameObject.cpp GameObject.h
-	$(CXX) $(CXXFLAGS) -c GameObject.cpp -o gameobject.o
+gameobject.o: ./src/GameObject.cpp ./src/GameObject.h
+	$(CXX) $(CXXFLAGS) -c ./src/GameObject.cpp -o ./bin/gameobject.o
 # -\- -\- -\- -\- -\- -\- -\- -/- -/- -/- -/- -/- -/- -/-
 
 clean:
-	rm -f *.o *.gch test.exe
+	rm -f *.o *.gch test.exe ./bin/*.o ./bin/*.gch ./bin/test.exe
