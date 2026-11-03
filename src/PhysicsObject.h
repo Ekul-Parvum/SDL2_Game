@@ -10,6 +10,7 @@
 namespace Ekul {
     class PhysicsObject {
         public:
+        PhysicsObject();
         PhysicsObject(int x, int y, int width, int height, float angle);
 
         // Modifying Velocity:
@@ -35,6 +36,11 @@ namespace Ekul {
         int getWidth();
         int getHeight();
         float getAngle();
+
+        // Set Width, Height, & Angle:
+        void setWidth(int width);
+        void setHeight(int height);
+        void setAngle(float angle);
 
 
         private:

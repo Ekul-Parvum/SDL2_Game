@@ -16,15 +16,13 @@ Description: Trying to make a simple 2d game
 // My Stuff
 #include "Global.h"
 #include "Window.h"
-#include "Texture.h"
-#include "PhysicsObject.h"
+#include "GameObject.h"
 
 bool initSDL2();
 bool loadMedia();
 void close();
 
-Ekul::Texture texture = Ekul::Texture();
-Ekul::PhysicsObject physicsObject = Ekul::PhysicsObject(0, 0, 100, 200, 0.0);
+Ekul::GameObject gameObject = Ekul::GameObject();
 
 int main(int argc, char* args[]) 
 {
@@ -46,8 +44,8 @@ int main(int argc, char* args[])
 
             // TODO: Add fps controll
 
-            texture.forceSetHeight(physicsObject.getHeight());
-            texture.forceSetWidth(physicsObject.getWidth());
+            gameObject.setHeight(50);
+            gameObject.setWidth(150);
 
             while (!quit)
             {
@@ -69,19 +67,19 @@ int main(int argc, char* args[])
                 const int speed = 10;
                 if (currentKeyStates[ SDL_SCANCODE_LEFT ])
                 {
-                    physicsObject.moveCenterPos(-speed, 0);
+                    gameObject.moveCenterPos(-speed, 0);
                 }
                 if (currentKeyStates[ SDL_SCANCODE_RIGHT ])
                 {
-                    physicsObject.moveCenterPos(speed, 0);
+                    gameObject.moveCenterPos(speed, 0);
                 }
                 if (currentKeyStates[ SDL_SCANCODE_UP ])
                 {
-                    physicsObject.moveCenterPos(0, -speed);
+                    gameObject.moveCenterPos(0, -speed);
                 }
                 if (currentKeyStates[ SDL_SCANCODE_DOWN ])
                 {
-                    physicsObject.moveCenterPos(0, speed);
+                    gameObject.moveCenterPos(0, speed);
                 }
 
                 if (!Global::gWindow.isMinimized())
@@ -91,8 +89,7 @@ int main(int argc, char* args[])
                     SDL_RenderClear(Global::gRenderer);
 
                     // Render:
-                    SDL_Point objPos = physicsObject.getCenterPos();
-                    texture.render(Global::gRenderer, objPos.x - texture.getWidth() / 2, objPos.y - texture.getHeight() / 2);
+                    gameObject.render(Global::gRenderer);
 
                     // Present to window:
                     SDL_RenderPresent(Global::gRenderer);
@@ -167,7 +164,7 @@ bool loadMedia()
     bool success = true;
 
     // Load texture with string in that font
-    if (!texture.loadFromFile(Global::gRenderer, Constants::FilePaths::plainColor))
+    if (!gameObject.loadImageFromFile(Global::gRenderer, Constants::FilePaths::plainColor))
     {
         printf("[Line %d] Couldn't load text to texture\n", __LINE__);
         success = false;
@@ -175,7 +172,7 @@ bool loadMedia()
     else
     {
 
-        texture.setClip({0, 0, 1, 1});
+        gameObject.setTextureClip({0, 0, 1, 1});
     }
 
     return success;
@@ -183,8 +180,8 @@ bool loadMedia()
 
 void close()
 {
-    // Free textures
-    texture.free();
+    // Free gameobject
+    gameObject.free();
 
     SDL_DestroyRenderer( Global::gRenderer );
     Global::gWindow.free();

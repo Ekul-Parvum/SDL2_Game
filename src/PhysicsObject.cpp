@@ -2,6 +2,18 @@
 
 using namespace Ekul;
 
+PhysicsObject::PhysicsObject()
+{
+    mCenter = {0, 0};
+
+    mWidth = 0;
+    mHeight = 0;
+    mAngle = 0;
+
+    mX_vel = 0;
+    mY_vel = 0;
+}
+
 PhysicsObject::PhysicsObject(int x, int y, int width, int height, float angle)
 {
     mCenter = {x, y};
@@ -79,4 +91,19 @@ int PhysicsObject::getHeight()
 float PhysicsObject::getAngle()
 {
     return mAngle;
+}
+
+void PhysicsObject::setWidth(int width)
+{
+    mWidth = width;
+}
+
+void PhysicsObject::setHeight(int height)
+{
+    mHeight = height;
+}
+
+void PhysicsObject::setAngle(float angle)
+{
+    mAngle = angle;
 }

@@ -7,12 +7,12 @@ LDLIBS = -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
 all: test
 
 # -- -- -- --[ Linking everything together ]-- -- -- --
-test: main.o window.o texture.o physicsobject.o
-	$(CXX) ./obj/main.o ./obj/window.o ./obj/texture.o ./obj/physicsobject.o $(LDLIBS) -o ./test.exe
+test: main.o window.o texture.o physicsobject.o gameobject.o
+	$(CXX) ./obj/main.o ./obj/window.o ./obj/texture.o ./obj/physicsobject.o ./obj/gameobject.o $(LDLIBS) -o ./test.exe
 # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 # -/- -/- -/- -/-[  Making Object Files  ]-\- -\- -\- -\-
-main.o: ./src/main.cpp ./src/Global.h ./src/Texture.h ./src/Window.h
+main.o: ./src/main.cpp ./src/Global.h ./src/Window.h ./src/GameObject.h
 	$(CXX) $(CXXFLAGS) -c ./src/main.cpp -o ./obj/main.o
 
 window.o: ./src/Window.cpp ./src/Window.h ./src/Global.h
@@ -23,6 +23,9 @@ texture.o: ./src/Texture.cpp ./src/Texture.h
 
 physicsobject.o: ./src/PhysicsObject.cpp ./src/PhysicsObject.h
 	$(CXX) $(CXXFLAGS) -c ./src/PhysicsObject.cpp -o ./obj/physicsobject.o
+
+gameobject.o: ./src/GameObject.cpp ./src/GameObject.h ./src/PhysicsObject.h ./src/Texture.h
+	$(CXX) $(CXXFLAGS) -c ./src/GameObject.cpp -o ./obj/gameobject.o
 # -\- -\- -\- -\- -\- -\- -\- -/- -/- -/- -/- -/- -/- -/-
 
 clean:
