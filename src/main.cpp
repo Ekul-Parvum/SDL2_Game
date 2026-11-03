@@ -24,8 +24,17 @@ void close();
 
 Ekul::GameObject gameObject = Ekul::GameObject();
 
+const int GAME_OBJECTS_SIZE = 10;
+Ekul::GameObject gameObjects[GAME_OBJECTS_SIZE];
+
 int main(int argc, char* args[]) 
 {
+    // Init gameobjects
+    for (int i = 0; i < GAME_OBJECTS_SIZE; i++)
+    {
+        gameObjects[i] = Ekul::GameObject();
+    }
+
     if(!initSDL2())
     {
         printf("[Line %d] initSDL2() failed.\n", __LINE__);
@@ -49,6 +58,7 @@ int main(int argc, char* args[])
 
             while (!quit)
             {
+
                 // Handle events on queue:
                 while (SDL_PollEvent(&event) != 0)
                 {
@@ -64,7 +74,7 @@ int main(int argc, char* args[])
 
                 // User input
                 const Uint8* currentKeyStates = SDL_GetKeyboardState( NULL );
-                const int speed = 10;
+                const int speed = 5;
                 if (currentKeyStates[ SDL_SCANCODE_LEFT ])
                 {
                     gameObject.moveCenterPos(-speed, 0);
@@ -88,8 +98,16 @@ int main(int argc, char* args[])
                     SDL_SetRenderDrawColor( Global::gRenderer, 0xAA, 0xAA, 0xAA, 0xAA );
                     SDL_RenderClear(Global::gRenderer);
 
+                    // Clear screen:
+                    printf("\033[H\033[2J");
+
                     // Render:
                     gameObject.render(Global::gRenderer);
+
+                    for (int i = 0; i < GAME_OBJECTS_SIZE; i++)
+                    {
+                        gameObjects[i].render(Global::gRenderer);
+                    }
 
                     // Present to window:
                     SDL_RenderPresent(Global::gRenderer);
@@ -163,7 +181,7 @@ bool loadMedia()
 {
     bool success = true;
 
-    // Load texture with string in that font
+    // Load texture 
     if (!gameObject.loadImageFromFile(Global::gRenderer, Constants::FilePaths::plainColor))
     {
         printf("[Line %d] Couldn't load text to texture\n", __LINE__);
@@ -173,6 +191,25 @@ bool loadMedia()
     {
 
         gameObject.setTextureClip({0, 0, 1, 1});
+    }
+
+    for (int i = 0; i < GAME_OBJECTS_SIZE; i++)
+    {
+        gameObjects[i] = Ekul::GameObject();
+
+        // Load texture 
+        if (!gameObjects[i].loadImageFromFile(Global::gRenderer, Constants::FilePaths::plainColor))
+        {
+            printf("[Line %d] Couldn't load text to texture\n", __LINE__);
+            success = false;
+        }
+        else
+        {
+            gameObjects[i].setTextureClip({2, 0, 1, 1});
+            gameObjects[i].setWidth(10);
+            gameObjects[i].setHeight(30);
+            gameObjects[i].setCenterPos(100 + 60 * i, 100 + 60 * i);
+        }
     }
 
     return success;

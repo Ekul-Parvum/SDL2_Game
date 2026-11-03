@@ -81,19 +81,21 @@ float GameObject::getHitboxAngle()
 void GameObject::setWidth(int width)
 {
     mPhysicsObject.setWidth(width);
-    mTexture.setWidth(width);
+    mTexture.forceSetWidth(width);
 }
 
 void GameObject::setHeight(int height)
 {
     mPhysicsObject.setHeight(height);
-    mTexture.setHeight(height);
+    mTexture.forceSetHeight(height);
 }
 
 void GameObject::render(SDL_Renderer* renderer)
 {
     SDL_Point gameObjectPosition = mPhysicsObject.getCenterPos();
-    mTexture.render(renderer, gameObjectPosition.x - mTexture.getWidth() / 2, gameObjectPosition.y - mTexture.getHeight() / 2, mPhysicsObject.getAngle());
+    SDL_Point rectPos = {gameObjectPosition.x - mTexture.getWidth() / 2, gameObjectPosition.y - mTexture.getHeight() / 2};
+
+    mTexture.render(renderer, rectPos.x, rectPos.y, mPhysicsObject.getAngle());
 }
 
 bool GameObject::loadImageFromFile(SDL_Renderer* renderer, std::string path)
