@@ -17,6 +17,7 @@ Description: Trying to make a simple 2d game
 #include "Global.h"
 #include "Window.h"
 #include "GameObject.h"
+#include "LinkedList.h"
 
 bool initSDL2();
 bool loadMedia();
@@ -24,15 +25,17 @@ void close();
 
 Ekul::GameObject gameObject = Ekul::GameObject();
 
-const int GAME_OBJECTS_SIZE = 10;
-Ekul::GameObject gameObjects[GAME_OBJECTS_SIZE];
+// const int GAME_OBJECTS_SIZE = 10;
+// Ekul::GameObject gameObjects[GAME_OBJECTS_SIZE];
+
+Ekul::LinkedList<Ekul::GameObject> gameObjects;
 
 int main(int argc, char* args[]) 
 {
     // Init gameobjects
-    for (int i = 0; i < GAME_OBJECTS_SIZE; i++)
+    for (int i = 0; i < 10; i++)
     {
-        gameObjects[i] = Ekul::GameObject();
+        gameObjects.append(Ekul::GameObject());
     }
 
     if(!initSDL2())
@@ -104,9 +107,11 @@ int main(int argc, char* args[])
                     // Render:
                     gameObject.render(Global::gRenderer);
 
-                    for (int i = 0; i < GAME_OBJECTS_SIZE; i++)
+                    Ekul::Node<Ekul::GameObject>* currentNode = gameObjects.getHead();
+                    while (currentNode != nullptr)
                     {
-                        gameObjects[i].render(Global::gRenderer);
+                        currentNode->mItem.render(Global::gRenderer);
+                        currentNode = currentNode->mNext;
                     }
 
                     // Present to window:
@@ -193,23 +198,26 @@ bool loadMedia()
         gameObject.setTextureClip({0, 0, 1, 1});
     }
 
-    for (int i = 0; i < GAME_OBJECTS_SIZE; i++)
+    Ekul::Node<Ekul::GameObject>* currentNode = gameObjects.getHead();
+    int index = 0;
+    while (currentNode != nullptr)
     {
-        gameObjects[i] = Ekul::GameObject();
-
-        // Load texture 
-        if (!gameObjects[i].loadImageFromFile(Global::gRenderer, Constants::FilePaths::plainColor))
+        if (!currentNode->mItem.loadImageFromFile(Global::gRenderer, Constants::FilePaths::plainColor))
         {
-            printf("[Line %d] Couldn't load text to texture\n", __LINE__);
+            printf("[Line %d] Couldn't load image to texture\n", __LINE__);
             success = false;
         }
         else
         {
-            gameObjects[i].setTextureClip({2, 0, 1, 1});
-            gameObjects[i].setWidth(10);
-            gameObjects[i].setHeight(30);
-            gameObjects[i].setCenterPos(100 + 60 * i, 100 + 60 * i);
+            currentNode->mItem.setTextureClip({3, 0, 1, 1});
+            currentNode->mItem.setWidth(10);
+            currentNode->mItem.setHeight(30);
+            currentNode->mItem.setCenterPos(100 + 60 * index, 100 + 60 * index);
         }
+
+        // increment node
+        currentNode = currentNode->mNext;
+        index++;
     }
 
     return success;
