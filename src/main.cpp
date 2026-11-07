@@ -12,12 +12,12 @@ Description: Trying to make a simple 2d game
 
 // std
 #include <sstream>
+#include <vector>
 
 // My Stuff
 #include "Global.h"
 #include "Window.h"
 #include "GameObject.h"
-#include "LinkedList.h"
 
 bool initSDL2();
 bool loadMedia();
@@ -28,14 +28,16 @@ Ekul::GameObject gameObject = Ekul::GameObject();
 // const int GAME_OBJECTS_SIZE = 10;
 // Ekul::GameObject gameObjects[GAME_OBJECTS_SIZE];
 
-Ekul::LinkedList<Ekul::GameObject> gameObjects;
+// Ekul::LinkedList<Ekul::GameObject> gameObjects;
+std::vector<Ekul::GameObject> gameObjects;
+
 
 int main(int argc, char* args[]) 
 {
     // Init gameobjects
     for (int i = 0; i < 10; i++)
     {
-        gameObjects.append(Ekul::GameObject());
+        gameObjects.push_back(Ekul::GameObject());
     }
 
     if(!initSDL2())
@@ -107,11 +109,9 @@ int main(int argc, char* args[])
                     // Render:
                     gameObject.render(Global::gRenderer);
 
-                    Ekul::Node<Ekul::GameObject>* currentNode = gameObjects.getHead();
-                    while (currentNode != nullptr)
+                    for (int i = 0; i < (int)gameObjects.size(); i++)
                     {
-                        currentNode->mItem.render(Global::gRenderer);
-                        currentNode = currentNode->mNext;
+                        gameObjects[i].render(Global::gRenderer);
                     }
 
                     // Present to window:
@@ -198,26 +198,20 @@ bool loadMedia()
         gameObject.setTextureClip({0, 0, 1, 1});
     }
 
-    Ekul::Node<Ekul::GameObject>* currentNode = gameObjects.getHead();
-    int index = 0;
-    while (currentNode != nullptr)
+    for (int i = 0; i < (int)gameObjects.size(); i++)
     {
-        if (!currentNode->mItem.loadImageFromFile(Global::gRenderer, Constants::FilePaths::plainColor))
+        if (!gameObjects[i].loadImageFromFile(Global::gRenderer, Constants::FilePaths::plainColor))
         {
             printf("[Line %d] Couldn't load image to texture\n", __LINE__);
             success = false;
         }
         else
         {
-            currentNode->mItem.setTextureClip({3, 0, 1, 1});
-            currentNode->mItem.setWidth(10);
-            currentNode->mItem.setHeight(30);
-            currentNode->mItem.setCenterPos(100 + 60 * index, 100 + 60 * index);
+            gameObjects[i].setTextureClip({3, 0, 1, 1});
+            gameObjects[i].setWidth(10);
+            gameObjects[i].setHeight(30);
+            gameObjects[i].setCenterPos(100 + 60 * i, 100 + 60 * i);
         }
-
-        // increment node
-        currentNode = currentNode->mNext;
-        index++;
     }
 
     return success;

@@ -12,7 +12,7 @@ test: main.o window.o texture.o physicsobject.o gameobject.o
 # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 # -/- -/- -/- -/-[  Making Object Files  ]-\- -\- -\- -\-
-main.o: ./src/main.cpp ./src/Global.h ./src/Window.h ./src/GameObject.h ./src/LinkedList.tpp
+main.o: ./src/main.cpp ./src/Global.h ./src/Window.h ./src/GameObject.h
 	$(CXX) $(CXXFLAGS) -c ./src/main.cpp -o ./obj/main.o
 
 window.o: ./src/Window.cpp ./src/Window.h ./src/Global.h

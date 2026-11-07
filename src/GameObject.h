@@ -11,8 +11,28 @@
 namespace Ekul {
     class GameObject {
         public:
+        // Default constructor
         GameObject();
 
+        // Copy Constructor
+        // Makes copies of the GameObject at the given address
+        GameObject(const GameObject&)= default;
+
+        // Copy Assignment
+        // Copies the GameObject at the given address into a new address
+        GameObject& operator=(const GameObject&)= default;
+
+        // Move Constructor
+        // Makes copies of the GameObject at the given address
+        // But uses rvalue - so it reasigns pointers rather than remaking the object they point at.
+        GameObject(GameObject&&) noexcept = default;
+
+        // Move Assignment
+        // Copies the GameObject at the given address into a new address
+        // But uses rvalue - so it reasigns pointers rather than remaking the object they point at.
+        GameObject& operator=(GameObject&&) noexcept = default;
+
+        // Destructor
         ~GameObject();
 
         // Modifying Velocity:
