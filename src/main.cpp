@@ -18,6 +18,7 @@ Description: Trying to make a simple 2d game
 #include "Global.h"
 #include "Window.h"
 #include "GameObject.h"
+#include "PhysicsEngine.h"
 
 bool initSDL2();
 bool loadMedia();
@@ -31,9 +32,12 @@ Ekul::GameObject gameObject = Ekul::GameObject();
 // Ekul::LinkedList<Ekul::GameObject> gameObjects;
 std::vector<Ekul::GameObject> gameObjects;
 
+Ekul::PhysicsEngine physicsEngine = Ekul::PhysicsEngine(1.0);
 
 int main(int argc, char* args[]) 
 {
+    printf("Starting\n");
+
     // Init gameobjects
     for (int i = 0; i < 10; i++)
     {

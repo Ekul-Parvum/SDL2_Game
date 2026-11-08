@@ -13,6 +13,8 @@ namespace Ekul {
         PhysicsObject();
         PhysicsObject(int x, int y, int width, int height, float angle);
 
+        PhysicsObject(const PhysicsObject&) = default;
+        
         // Modifying Velocity:
         void changeVelocity(float x, float y);
         void setXVelocity(float x);

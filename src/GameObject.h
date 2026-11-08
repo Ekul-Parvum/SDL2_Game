@@ -3,6 +3,7 @@
 
 // My Stuff
 #include "PhysicsObject.h"
+#include "PhysicsEngine.h"
 #include "Texture.h"
 
 // std
@@ -14,9 +15,12 @@ namespace Ekul {
         // Default constructor
         GameObject();
 
+        // Constructor which also makes the physics object
+        GameObject(PhysicsEngine physicsEngine);
+
         // Copy Constructor
         // Makes copies of the GameObject at the given address
-        GameObject(const GameObject&)= default;
+        GameObject(const GameObject&);
 
         // Copy Assignment
         // Copies the GameObject at the given address into a new address
@@ -25,7 +29,7 @@ namespace Ekul {
         // Move Constructor
         // Makes copies of the GameObject at the given address
         // But uses rvalue - so it reasigns pointers rather than remaking the object they point at.
-        GameObject(GameObject&&) noexcept = default;
+        GameObject(GameObject&&) noexcept;
 
         // Move Assignment
         // Copies the GameObject at the given address into a new address
@@ -75,7 +79,7 @@ namespace Ekul {
         void free();
 
         private:
-        PhysicsObject mPhysicsObject;
+        PhysicsObject* mPhysicsObject;
         Texture mTexture;
     };
 }
