@@ -19,6 +19,7 @@ Description: Trying to make a simple 2d game
 #include "Window.h"
 #include "GameObject.h"
 #include "PhysicsEngine.h"
+#include "TextureManager.h"
 
 bool initSDL2();
 bool loadMedia();
@@ -33,6 +34,8 @@ Ekul::GameObject gameObject = Ekul::GameObject();
 std::vector<Ekul::GameObject> gameObjects;
 
 Ekul::PhysicsEngine physicsEngine = Ekul::PhysicsEngine(1.0);
+Ekul::TextureManager textureManager = Ekul::TextureManager();
+
 
 int main(int argc, char* args[]) 
 {
@@ -191,7 +194,7 @@ bool loadMedia()
     bool success = true;
 
     // Load texture 
-    if (!gameObject.loadImageFromFile(Global::gRenderer, Constants::FilePaths::plainColor))
+    if (!gameObject.loadImageFromFile(Global::gRenderer, &textureManager, Constants::FilePaths::plainColor))
     {
         printf("[Line %d] Couldn't load text to texture\n", __LINE__);
         success = false;
@@ -204,7 +207,7 @@ bool loadMedia()
 
     for (int i = 0; i < (int)gameObjects.size(); i++)
     {
-        if (!gameObjects[i].loadImageFromFile(Global::gRenderer, Constants::FilePaths::plainColor))
+        if (!gameObjects[i].loadImageFromFile(Global::gRenderer, &textureManager, Constants::FilePaths::plainColor))
         {
             printf("[Line %d] Couldn't load image to texture\n", __LINE__);
             success = false;

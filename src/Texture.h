@@ -10,6 +10,9 @@
 // std
 #include <string>
 
+// My stuff
+#include "TextureManager.h"
+
 namespace Ekul {
     class Texture {
         public:
@@ -20,7 +23,7 @@ namespace Ekul {
         ~Texture();
 
         //Loads image at specified path
-        bool loadFromFile(SDL_Renderer* renderer, std::string path);
+        bool loadFromFile(SDL_Renderer* renderer, TextureManager* textureManager, std::string path, SDL_Color keyColor = {0, 0, 0, 0}, bool colorKeyFlag = false);
 
         #if defined(SDL_TTF_MAJOR_VERSION)
         // Loads image from given string

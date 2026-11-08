@@ -5,6 +5,7 @@
 #include "PhysicsObject.h"
 #include "PhysicsEngine.h"
 #include "Texture.h"
+#include "TextureManager.h"
 
 // std
 #include <string>
@@ -71,7 +72,7 @@ namespace Ekul {
         void render(SDL_Renderer* renderer);
 
         // Loads the given image into the texture
-        bool loadImageFromFile(SDL_Renderer* renderer, std::string path);
+        bool loadImageFromFile(SDL_Renderer* renderer, TextureManager* textureManager, std::string path, SDL_Color keyColor = {0, 0, 0, 0}, bool colorKeyFlag = false);
 
         // Set the clip of the texture to be rendered
         void setTextureClip(SDL_Rect clip);

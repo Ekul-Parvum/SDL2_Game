@@ -121,9 +121,18 @@ void GameObject::render(SDL_Renderer* renderer)
     mTexture.render(renderer, rectPos.x, rectPos.y, mPhysicsObject->getAngle());
 }
 
-bool GameObject::loadImageFromFile(SDL_Renderer* renderer, std::string path)
+bool GameObject::loadImageFromFile(SDL_Renderer* renderer, TextureManager* textureManager, std::string path, SDL_Color keyColor, bool colorKeyFlag)
 {
-    return mTexture.loadFromFile(renderer, path);
+    // Load the image:
+    bool success = mTexture.loadFromFile(renderer, textureManager, path, keyColor, colorKeyFlag);
+
+    // Keep width and height the same between texture and physics object:
+    mPhysicsObject->setHeight(mTexture.getHeight());
+    mPhysicsObject->setHeight(mTexture.getWidth());
+
+    // return success flag:
+    return success;
+
 }
 
 void GameObject::setTextureClip(SDL_Rect clip)

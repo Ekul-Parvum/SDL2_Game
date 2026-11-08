@@ -16,43 +16,23 @@ Texture::~Texture()
     free();
 }
 
-bool Texture::loadFromFile(SDL_Renderer* renderer, std::string path)
+bool Texture::loadFromFile(SDL_Renderer* renderer, TextureManager* textureManager, std::string path, SDL_Color keyColor, bool colorKeyFlag)
 {
-    // Get rid of pre-existing texture.
-    free();
+    // Load new SDL_Texture
+    mTexture = textureManager->loadImageFromFile(renderer, path, keyColor, colorKeyFlag);
 
-    // The final texture
-    SDL_Texture* newTexture = NULL;
+    // Keep track of width and height:
+    SDL_QueryTexture(mTexture, NULL, NULL, &mWidth, &mHeight);
 
-    // Load the image
-    SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-    if (loadedSurface == NULL)
+    // Return
+    if (mTexture != NULL)
     {
-        printf("[Line %d] Failed to load image at %s. IMG ERROR: %s\n", __LINE__, path.c_str(), IMG_GetError());
+        return true;
     }
     else
     {
-        //SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0xff, 0xff, 0xff));
-
-        // Make a texture out of the surface
-        newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-        if (newTexture == NULL)
-        {
-            printf("[Line %d] Failed to convert image surface to texture at %s. IMG ERROR: %s\n", __LINE__, path.c_str(), IMG_GetError());
-        }
-        else
-        {
-            // Get image dimensions
-            mWidth = loadedSurface->w;
-            mHeight = loadedSurface->h;
-        }
-
-        // Free up that surface
-        SDL_FreeSurface(loadedSurface);
+        return false;
     }
-
-    mTexture = newTexture;
-    return mTexture != NULL;
 }
 
 #if defined(SDL_TTF_MAJOR_VERSION)
@@ -127,6 +107,8 @@ void Texture::setAlpha(Uint8 alpha)
 
 void Texture::render(SDL_Renderer* renderer, int x, int y, double angle, SDL_Point* center, SDL_RendererFlip flip)
 {
+    // printf("Rendering at: (%d, %d), w:%d, h:%d\n", x, y, mWidth, mHeight);
+
     // The portion of the screen/renderer that this texture will take up
     SDL_Rect renderQuad = {x, y, mWidth, mHeight};
 
@@ -142,7 +124,10 @@ void Texture::render(SDL_Renderer* renderer, int x, int y, double angle, SDL_Poi
     }
 
     // Put it to the screen!
-    SDL_RenderCopyEx(renderer, mTexture, tempClip, &renderQuad, angle, center, flip);
+    if (SDL_RenderCopyEx(renderer, mTexture, tempClip, &renderQuad, angle, center, flip) != 0)
+    {
+        printf("Texturs.cpp Line %d | Failed to copy texture to renderer. SDL_Error: %s\n", __LINE__, SDL_GetError());
+    }
 }
 
 SDL_Rect Texture::getClip()
