@@ -23,6 +23,8 @@ namespace Ekul {
         // Get Velocity:
         float getXVelocity();
         float getYVelocity();
+
+        void applyVelocity();
         
         // Get center point:
         SDL_Point getCenterPos();

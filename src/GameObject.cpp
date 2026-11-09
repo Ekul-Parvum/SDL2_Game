@@ -5,12 +5,14 @@ using namespace Ekul;
 GameObject::GameObject()
 {
     mPhysicsObject = new PhysicsObject(0, 0, 100, 200, 0.0);
+    mPhysicsEngine = nullptr;
     mTexture = Texture();
 }
 
-GameObject::GameObject(PhysicsEngine physicsEngine)
+GameObject::GameObject(PhysicsEngine* physicsEngine)
 {
-    mPhysicsObject = physicsEngine.newPhysicsObject(PhysicsObject(0, 0, 100, 200, 0.0));
+    mPhysicsObject = physicsEngine->newPhysicsObject(PhysicsObject(0, 0, 100, 200, 0.0));
+    mPhysicsEngine = physicsEngine;
     mTexture = Texture();
 }
 
@@ -18,6 +20,7 @@ GameObject::GameObject(PhysicsEngine physicsEngine)
 GameObject::GameObject(const GameObject& other)
 {
     mPhysicsObject = new PhysicsObject(*other.mPhysicsObject);
+    mPhysicsEngine = other.mPhysicsEngine;
     mTexture = other.mTexture;
 }
 
@@ -25,6 +28,7 @@ GameObject::GameObject(const GameObject& other)
 GameObject::GameObject(GameObject&& other) noexcept
 {
     mPhysicsObject = other.mPhysicsObject;
+    mPhysicsEngine = other.mPhysicsEngine;
     other.mPhysicsObject = nullptr;
 
     mTexture = std::move(other.mTexture);
@@ -32,7 +36,6 @@ GameObject::GameObject(GameObject&& other) noexcept
 
 GameObject::~GameObject()
 {
-    delete mPhysicsObject;
     free();
 }
 
@@ -142,5 +145,17 @@ void GameObject::setTextureClip(SDL_Rect clip)
 
 void GameObject::free()
 {
+    if (mPhysicsEngine == nullptr)
+    {
+        delete mPhysicsObject;
+        mPhysicsObject = nullptr;
+    }
+    else
+    {
+        mPhysicsEngine->deletePhysicsObject(mPhysicsObject);
+        delete mPhysicsObject;
+        mPhysicsObject = nullptr;
+    }
+
     mTexture.free();
 }

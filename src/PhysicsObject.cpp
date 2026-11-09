@@ -52,6 +52,11 @@ float PhysicsObject::getYVelocity()
     return mY_vel;
 }
 
+void PhysicsObject::applyVelocity()
+{
+    moveCenterPos(mX_vel, mY_vel);
+}
+
 SDL_Point PhysicsObject::getCenterPos()
 {
     return mCenter;

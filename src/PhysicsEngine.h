@@ -3,6 +3,7 @@
 
 // std
 #include <vector>
+#include <limits>
 
 // My Stuff
 #include "PhysicsObject.h"
@@ -29,17 +30,27 @@ namespace Ekul {
 
         PhysicsObject* newPhysicsObject(PhysicsObject physicsObject);
 
+        bool deletePhysicsObject(PhysicsObject* physicsObject);
+
         void applyVelocities();
 
         // TODO: std::vector<Contract> createContracts();
 
         // TODO: bool resolveContracts();
 
+        void setGravity(float gravity);
+        float getGravity();
+
+        void setLowerBound(int lowerBound);
+        int getLowerBound();
+
         private:
 
-        std::vector<PhysicsObject> mPhysicsObjects;
+        std::vector<PhysicsObject*> mPhysicsObjects;
 
         float mGravity;
+
+        int mLowerBound;
     };
 }
 

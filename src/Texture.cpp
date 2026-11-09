@@ -126,7 +126,7 @@ void Texture::render(SDL_Renderer* renderer, int x, int y, double angle, SDL_Poi
     // Put it to the screen!
     if (SDL_RenderCopyEx(renderer, mTexture, tempClip, &renderQuad, angle, center, flip) != 0)
     {
-        printf("Texturs.cpp Line %d | Failed to copy texture to renderer. SDL_Error: %s\n", __LINE__, SDL_GetError());
+        printf("Texture.cpp Line %d | Failed to copy texture to renderer. SDL_Error: %s\n", __LINE__, SDL_GetError());
     }
 }
 

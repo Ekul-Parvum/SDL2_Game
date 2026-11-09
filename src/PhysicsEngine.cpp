@@ -4,26 +4,44 @@ using namespace Ekul;
 
 PhysicsEngine::PhysicsEngine()
 {
-
-}
-
-PhysicsEngine::PhysicsEngine(float gravity)
-{
-    mGravity = gravity;
+    mGravity = 0;
+    mLowerBound = std::numeric_limits<int>::max();
 }
 
 PhysicsObject* PhysicsEngine::newPhysicsObject(PhysicsObject physicsObject)
 {
-    mPhysicsObjects.push_back(physicsObject);
+    mPhysicsObjects.push_back(new PhysicsObject(physicsObject));
 
-    return &mPhysicsObjects[mPhysicsObjects.size() - 1];
+    return mPhysicsObjects[mPhysicsObjects.size() - 1];
+}
+
+bool PhysicsEngine::deletePhysicsObject(PhysicsObject* physicsObject)
+{
+    printf("Delete Physics Object\n");
+    for (int i = 0; i < (int)mPhysicsObjects.size(); i++)
+    {
+        if (mPhysicsObjects[i] == physicsObject)
+        {
+            std::swap(mPhysicsObjects[i], mPhysicsObjects.back());
+            mPhysicsObjects.pop_back();
+            return true;
+        }
+    }
+    return false;
 }
 
 void PhysicsEngine::applyVelocities()
 {
     for (int i = 0; i < (int)mPhysicsObjects.size(); i++)
     {
-        mPhysicsObjects[i].changeVelocity(0, mGravity);
+        mPhysicsObjects[i]->changeVelocity(0, mGravity);
+
+        mPhysicsObjects[i]->applyVelocity();
+
+        if (mPhysicsObjects[i]->getCenterPos().y + mPhysicsObjects[i]->getHeight() / 2 > mLowerBound)
+        {
+            mPhysicsObjects[i]->setYVelocity(0);
+        }
     }
 }
 
@@ -36,3 +54,23 @@ void PhysicsEngine::applyVelocities()
 // {
 
 // }
+
+void PhysicsEngine::setGravity(float gravity)
+{
+    mGravity = gravity;
+}
+
+float PhysicsEngine::getGravity()
+{
+    return mGravity;
+}
+
+void PhysicsEngine::setLowerBound(int lowerBound)
+{
+    mLowerBound = lowerBound;
+}
+
+int PhysicsEngine::getLowerBound()
+{
+    return mLowerBound;
+}

@@ -17,7 +17,7 @@ namespace Ekul {
         GameObject();
 
         // Constructor which also makes the physics object
-        GameObject(PhysicsEngine physicsEngine);
+        GameObject(PhysicsEngine* physicsEngine);
 
         // Copy Constructor
         // Makes copies of the GameObject at the given address
@@ -80,6 +80,7 @@ namespace Ekul {
         void free();
 
         private:
+        PhysicsEngine* mPhysicsEngine;
         PhysicsObject* mPhysicsObject;
         Texture mTexture;
     };
