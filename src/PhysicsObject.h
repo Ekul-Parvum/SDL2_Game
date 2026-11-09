@@ -31,6 +31,8 @@ namespace Ekul {
 
         // Change PhysicsObject position:
         void setCenterPos(int x, int y);
+        void setCenterYPos(int y);
+        void setCenterXPos(int x);
         void moveCenterPos(int x_change, int y_change);
 
         // Rotate Object:

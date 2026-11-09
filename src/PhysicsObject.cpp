@@ -67,6 +67,15 @@ void PhysicsObject::setCenterPos(int x, int y)
     mCenter = {x, y};
 }
 
+void PhysicsObject::setCenterYPos(int y)
+{
+    mCenter.y = y;
+}
+void PhysicsObject::setCenterXPos(int x)
+{
+    mCenter.x = x;
+}
+
 void PhysicsObject::moveCenterPos(int x_change, int y_change)
 {
     mCenter.x += x_change;

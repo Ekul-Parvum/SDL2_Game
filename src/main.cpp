@@ -45,7 +45,10 @@ int main(int argc, char* args[])
     printf("Starting\n");
     
     physicsEngine.setGravity(0.05);
-    physicsEngine.setLowerBound(500);
+    physicsEngine.setLowerBound(Constants::SCREEN_HEIGHT);
+    physicsEngine.setUpperBound(0);
+    physicsEngine.setRightBound(Constants::SCREEN_WIDTH);
+    physicsEngine.setLeftBound(0);
 
     // Init gameobjects
     for (int i = 0; i < 10; i++)

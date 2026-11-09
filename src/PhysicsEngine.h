@@ -4,6 +4,7 @@
 // std
 #include <vector>
 #include <limits>
+#include <cmath>
 
 // My Stuff
 #include "PhysicsObject.h"
@@ -13,10 +14,12 @@ namespace Ekul {
     class Contract {
         public:
         Contract(PhysicsObject* physicsObject1, PhysicsObject* physicsObject2);
+        Contract(PhysicsObject* physicsObject1);
 
-        private:
         PhysicsObject* mPhysicsObject1;
         PhysicsObject* mPhysicsObject2;
+
+        bool mIsBoundContract;
     };
 
     class PhysicsEngine {
@@ -37,15 +40,28 @@ namespace Ekul {
 
         void applyVelocities();
 
-        // TODO: std::vector<Contract> createContracts();
+        bool isCollision(PhysicsObject* physicsObject1, PhysicsObject* physicsObject2);
 
-        // TODO: bool resolveContracts();
+        bool isCollisionWithBound(PhysicsObject* physicsObject);
+
+        std::vector<Contract> createContracts();
+
+        bool resolveContracts(std::vector<Contract> contracts);
 
         void setGravity(float gravity);
         float getGravity();
 
         void setLowerBound(int lowerBound);
         int getLowerBound();
+        
+        void setUpperBound(int lowerBound);
+        int getUpperBound();
+
+        void setRightBound(int lowerBound);
+        int getRightBound();
+
+        void setLeftBound(int lowerBound);
+        int getLeftBound();
 
         void free();
 
@@ -56,6 +72,9 @@ namespace Ekul {
         float mGravity;
 
         int mLowerBound;
+        int mUpperBound;
+        int mRightBound;
+        int mLeftBound;
     };
 }
 
