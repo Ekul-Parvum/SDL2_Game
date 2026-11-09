@@ -15,6 +15,11 @@ PhysicsObject* PhysicsEngine::newPhysicsObject(PhysicsObject physicsObject)
     return mPhysicsObjects[mPhysicsObjects.size() - 1];
 }
 
+PhysicsEngine::~PhysicsEngine()
+{
+    free();
+}
+
 bool PhysicsEngine::deletePhysicsObject(PhysicsObject* physicsObject)
 {
     printf("Delete Physics Object\n");
@@ -73,4 +78,14 @@ void PhysicsEngine::setLowerBound(int lowerBound)
 int PhysicsEngine::getLowerBound()
 {
     return mLowerBound;
+}
+
+void PhysicsEngine::free()
+{
+    // Loop through physics objects and free them:
+    for (int i = 0; i < (int)mPhysicsObjects.size(); i++)
+    {
+        delete mPhysicsObjects[i];
+        mPhysicsObjects[i] = nullptr;
+    }
 }

@@ -28,6 +28,9 @@ namespace Ekul {
         // Nice Constructor
         PhysicsEngine(float gravity);
 
+        // Destructor
+        ~PhysicsEngine();
+
         PhysicsObject* newPhysicsObject(PhysicsObject physicsObject);
 
         bool deletePhysicsObject(PhysicsObject* physicsObject);
@@ -43,6 +46,8 @@ namespace Ekul {
 
         void setLowerBound(int lowerBound);
         int getLowerBound();
+
+        void free();
 
         private:
 

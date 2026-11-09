@@ -23,10 +23,10 @@ namespace Ekul
 
         bool deleteTexture(SDL_Texture* texture);
 
+        void free();
+        
         private:
         
-        void free();
-
         std::vector<SDL_Texture*> mTextures;
 
     };

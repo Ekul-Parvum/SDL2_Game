@@ -251,9 +251,13 @@ void close()
 {
     // Free gameobject
     gameObject.free();
+    gameObject2.free();
 
     SDL_DestroyRenderer( Global::gRenderer );
     Global::gWindow.free();
+
+    physicsEngine.free();
+    textureManager.free();
     
     //Quit SDL subsystems
     TTF_Quit();
