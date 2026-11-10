@@ -37,7 +37,7 @@ Ekul::GameObject gameObject = Ekul::GameObject(&physicsEngine);
 // Ekul::GameObject gameObjects[GAME_OBJECTS_SIZE];
 
 // Ekul::LinkedList<Ekul::GameObject> gameObjects;
-std::vector<Ekul::GameObject> gameObjects;
+std::vector<Ekul::GameObject*> gameObjects;
 
 
 int main(int argc, char* args[]) 
@@ -53,7 +53,7 @@ int main(int argc, char* args[])
     // Init gameobjects
     for (int i = 0; i < 10; i++)
     {
-        gameObjects.push_back(Ekul::GameObject(&physicsEngine));
+        gameObjects.push_back(new Ekul::GameObject(&physicsEngine));
     }
 
     if(!initSDL2())
@@ -130,7 +130,7 @@ int main(int argc, char* args[])
 
                     for (int i = 0; i < (int)gameObjects.size(); i++)
                     {
-                        gameObjects[i].render(Global::gRenderer);
+                        gameObjects[i]->render(Global::gRenderer);
                     }
 
                     // Present to window:
@@ -233,17 +233,17 @@ bool loadMedia()
 
     for (int i = 0; i < (int)gameObjects.size(); i++)
     {
-        if (!gameObjects[i].loadImageFromFile(Global::gRenderer, &textureManager, Constants::FilePaths::plainColor))
+        if (!gameObjects[i]->loadImageFromFile(Global::gRenderer, &textureManager, Constants::FilePaths::plainColor))
         {
             printf("[Line %d] Couldn't load image to texture\n", __LINE__);
             success = false;
         }
         else
         {
-            gameObjects[i].setTextureClip({3, 0, 1, 1});
-            gameObjects[i].setWidth(10);
-            gameObjects[i].setHeight(30);
-            gameObjects[i].setCenterPos(100 + 60 * i, 100 + 60 * i);
+            gameObjects[i]->setTextureClip({3, 0, 1, 1});
+            gameObjects[i]->setWidth(10);
+            gameObjects[i]->setHeight(30);
+            gameObjects[i]->setCenterPos(100 + 60 * i, 100 + 60 * i);
         }
     }
 
@@ -255,6 +255,11 @@ void close()
     // Free gameobject
     gameObject.free();
     gameObject2.free();
+
+    for (int i = 0; i < (int)gameObjects.size(); i++)
+    {
+        delete gameObjects[i];
+    }
 
     SDL_DestroyRenderer( Global::gRenderer );
     Global::gWindow.free();
