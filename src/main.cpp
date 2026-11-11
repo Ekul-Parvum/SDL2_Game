@@ -21,7 +21,10 @@ Description: Trying to make a simple 2d game
 #include "PhysicsEngine.h"
 #include "TextureManager.h"
 
+bool initGame();
 bool initSDL2();
+void initPhysicsEngine();
+void makeGameObjects();
 bool loadMedia();
 void close();
 
@@ -30,112 +33,86 @@ Ekul::PhysicsEngine physicsEngine = Ekul::PhysicsEngine();
 Ekul::TextureManager textureManager = Ekul::TextureManager();
 
 Ekul::GameObject gameObject2 = Ekul::GameObject(&physicsEngine);
-
 Ekul::GameObject gameObject = Ekul::GameObject(&physicsEngine);
 
-// const int GAME_OBJECTS_SIZE = 10;
-// Ekul::GameObject gameObjects[GAME_OBJECTS_SIZE];
-
-// Ekul::LinkedList<Ekul::GameObject> gameObjects;
 std::vector<Ekul::GameObject*> gameObjects;
-
 
 int main(int argc, char* args[]) 
 {
     printf("Starting\n");
     
-    physicsEngine.setGravity(0.05);
-    physicsEngine.setLowerBound(Constants::SCREEN_HEIGHT);
-    physicsEngine.setUpperBound(0);
-    physicsEngine.setRightBound(Constants::SCREEN_WIDTH);
-    physicsEngine.setLeftBound(0);
-
-    // Init gameobjects
-    for (int i = 0; i < 10; i++)
+    if(!initGame())
     {
-        gameObjects.push_back(new Ekul::GameObject(&physicsEngine));
-    }
-
-    if(!initSDL2())
-    {
-        printf("[Line %d] initSDL2() failed.\n", __LINE__);
+        printf("[main() Line %d] initGame() failed.\n", __LINE__);
     }
     else
     {
-        if (!loadMedia())
+        bool quit = false;
+
+        SDL_Event event;
+
+        // TODO: Add fps controll
+
+        gameObject.setHeight(50);
+        gameObject.setWidth(150);
+
+        while (!quit)
         {
-            printf("[Line %d] loadMedia() failed.\n", __LINE__);
-        }
-        else
-        {
-            bool quit = false;
+            // Clear screen:
+            printf("\033[H\033[2J");
 
-            SDL_Event event;
-
-            // TODO: Add fps controll
-
-            gameObject.setHeight(50);
-            gameObject.setWidth(150);
-
-            while (!quit)
+            // Handle events on queue:
+            while (SDL_PollEvent(&event) != 0)
             {
-                
-                // Clear screen:
-                printf("\033[H\033[2J");
-
-                // Handle events on queue:
-                while (SDL_PollEvent(&event) != 0)
+                // If user clicks the x to quit
+                if (event.type == SDL_QUIT)
                 {
-                    // If user clicks the x to quit
-                    if (event.type == SDL_QUIT)
-                    {
-                        quit = true;
-                    }
-
-                    // Handle window events
-                    Global::gWindow.handleEvent(event);
+                    quit = true;
                 }
 
-                // User input
-                const Uint8* currentKeyStates = SDL_GetKeyboardState( NULL );
-                const int speed = 5;
-                if (currentKeyStates[ SDL_SCANCODE_LEFT ])
+                // Handle window events
+                Global::gWindow.handleEvent(event);
+            }
+
+            // User input
+            const Uint8* currentKeyStates = SDL_GetKeyboardState( NULL );
+            const int speed = 5;
+            if (currentKeyStates[ SDL_SCANCODE_LEFT ])
+            {
+                gameObject.moveCenterPos(-speed, 0);
+            }
+            if (currentKeyStates[ SDL_SCANCODE_RIGHT ])
+            {
+                gameObject.moveCenterPos(speed, 0);
+            }
+            if (currentKeyStates[ SDL_SCANCODE_UP ])
+            {
+                gameObject.moveCenterPos(0, -speed);
+            }
+            if (currentKeyStates[ SDL_SCANCODE_DOWN ])
+            {
+                gameObject.moveCenterPos(0, speed);
+            }
+
+            physicsEngine.applyVelocities();
+
+            if (!Global::gWindow.isMinimized())
+            {
+                // Clear Screen
+                SDL_SetRenderDrawColor( Global::gRenderer, 0xAA, 0xAA, 0xAA, 0xAA );
+                SDL_RenderClear(Global::gRenderer);
+
+                // Render:
+                gameObject.render(Global::gRenderer);
+                gameObject2.render(Global::gRenderer);
+
+                for (int i = 0; i < (int)gameObjects.size(); i++)
                 {
-                    gameObject.moveCenterPos(-speed, 0);
-                }
-                if (currentKeyStates[ SDL_SCANCODE_RIGHT ])
-                {
-                    gameObject.moveCenterPos(speed, 0);
-                }
-                if (currentKeyStates[ SDL_SCANCODE_UP ])
-                {
-                    gameObject.moveCenterPos(0, -speed);
-                }
-                if (currentKeyStates[ SDL_SCANCODE_DOWN ])
-                {
-                    gameObject.moveCenterPos(0, speed);
+                    gameObjects[i]->render(Global::gRenderer);
                 }
 
-                physicsEngine.applyVelocities();
-
-                if (!Global::gWindow.isMinimized())
-                {
-                    // Clear Screen
-                    SDL_SetRenderDrawColor( Global::gRenderer, 0xAA, 0xAA, 0xAA, 0xAA );
-                    SDL_RenderClear(Global::gRenderer);
-
-                    // Render:
-                    gameObject.render(Global::gRenderer);
-                    gameObject2.render(Global::gRenderer);
-
-                    for (int i = 0; i < (int)gameObjects.size(); i++)
-                    {
-                        gameObjects[i]->render(Global::gRenderer);
-                    }
-
-                    // Present to window:
-                    SDL_RenderPresent(Global::gRenderer);
-                }
+                // Present to window:
+                SDL_RenderPresent(Global::gRenderer);
             }
         }
     }
@@ -146,6 +123,30 @@ int main(int argc, char* args[])
 }
 
 #pragma region functions
+bool initGame()
+{
+    bool success = true;
+
+    initPhysicsEngine();
+    makeGameObjects();
+
+    if(!initSDL2())
+    {
+        printf("[Main - initGame() Line %d] initSDL2() failed.\n", __LINE__);
+        success = false;
+    }
+    else
+    {
+        if (!loadMedia())
+        {
+            printf("[Main - initGame() Line %d] loadMedia() failed.\n", __LINE__);
+            success = false;
+        }
+    }
+
+    return success;
+}
+
 bool initSDL2()
 {
      // Initialization flag
@@ -201,6 +202,25 @@ bool initSDL2()
     } 
 
     return success;
+}
+
+void initPhysicsEngine()
+{
+    physicsEngine.setGravity(0.05);
+    physicsEngine.setLowerBound(Constants::SCREEN_HEIGHT);
+    physicsEngine.setUpperBound(0);
+    physicsEngine.setRightBound(Constants::SCREEN_WIDTH);
+    physicsEngine.setLeftBound(0);
+
+}
+
+void makeGameObjects()
+{
+    // Init gameobjects
+    for (int i = 0; i < 10; i++)
+    {
+        gameObjects.push_back(new Ekul::GameObject(&physicsEngine));
+    }
 }
 
 bool loadMedia()
