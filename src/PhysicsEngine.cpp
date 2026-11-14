@@ -4,6 +4,9 @@ using namespace Ekul;
 
 float getDistance(SDL_Point point1, SDL_Point point2);
 
+/// @brief Creates a contract between two physicsObjects
+/// @param physicsObject1 
+/// @param physicsObject2 
 Contract::Contract(PhysicsObject* physicsObject1, PhysicsObject* physicsObject2)
 {
     mPhysicsObject1 = physicsObject1;
@@ -12,6 +15,8 @@ Contract::Contract(PhysicsObject* physicsObject1, PhysicsObject* physicsObject2)
     mIsBoundContract = false;
 }
 
+/// @brief Creates a boundContract - A contract with one phpysicsObject which is colliding with one of the physicsEngine's bounds
+/// @param physicsObject1 
 Contract::Contract(PhysicsObject* physicsObject1)
 {
     mPhysicsObject1 = physicsObject1;
@@ -20,6 +25,7 @@ Contract::Contract(PhysicsObject* physicsObject1)
     mIsBoundContract = true;
 }
 
+/// @brief PhysicsEngine Constructor
 PhysicsEngine::PhysicsEngine()
 {
     mGravity = 0;
@@ -31,6 +37,9 @@ PhysicsEngine::PhysicsEngine()
     mLeftBound = std::numeric_limits<int>::min();
 }
 
+/// @brief Creates a new physicsObject, and stores a pointer to it in physics engine
+/// @param physicsObject The new physicsObject will be a copy of this one
+/// @return Returns a pointer to the new physcisObject
 PhysicsObject* PhysicsEngine::newPhysicsObject(PhysicsObject physicsObject)
 {
     mPhysicsObjects.push_back(new PhysicsObject(physicsObject));
@@ -38,11 +47,15 @@ PhysicsObject* PhysicsEngine::newPhysicsObject(PhysicsObject physicsObject)
     return mPhysicsObjects[mPhysicsObjects.size() - 1];
 }
 
+/// @brief PhysicsEngine destructor - just calls PhysicsEngine::free()
 PhysicsEngine::~PhysicsEngine()
 {
     free();
 }
 
+/// @brief Deletes the physicsObject at the given address if it is in physicsEngine
+/// @param physicsObject A pointer to the physicsObject to be deleted
+/// @return Returns true if it found the physicsObject in itself, and deleted it - If it didin't find it, it returns false and does nothing.
 bool PhysicsEngine::deletePhysicsObject(PhysicsObject* physicsObject)
 {
     printf("Delete Physics Object\n");
@@ -58,6 +71,7 @@ bool PhysicsEngine::deletePhysicsObject(PhysicsObject* physicsObject)
     return false;
 }
 
+/// @brief Applies some velocities, like gravity, and then moves all the physicsObjects around based on their velocities
 void PhysicsEngine::applyVelocities()
 {
     for (int i = 0; i < (int)mPhysicsObjects.size(); i++)
@@ -72,6 +86,10 @@ void PhysicsEngine::applyVelocities()
     }
 }
 
+/// @brief Tests if two physicsObjects are colliding
+/// @param physicsObject1 
+/// @param physicsObject2 
+/// @return Returns true if they are colliding, false otherwise
 bool PhysicsEngine::isCollision(PhysicsObject* physicsObject1, PhysicsObject* physicsObject2)
 {
     SDL_Point   pos1    = physicsObject1->getCenterPos();
@@ -95,6 +113,9 @@ bool PhysicsEngine::isCollision(PhysicsObject* physicsObject1, PhysicsObject* ph
     }
 }
 
+/// @brief Tests if the given physicsObject is outside of physicsEngine's bounds
+/// @param physicsObject 
+/// @return Returns true if it is outside of bounds, false otherwise
 bool PhysicsEngine::isCollisionWithBound(PhysicsObject* physicsObject)
 {
     SDL_Point   pos     = physicsObject->getCenterPos();
@@ -114,6 +135,8 @@ bool PhysicsEngine::isCollisionWithBound(PhysicsObject* physicsObject)
     }
 }
 
+/// @brief Creates contracts between all the physicsObjects that are colliding with eachother
+/// @return Returns a vector of contracts between all the physicsObjects that are colliding with eachother
 std::vector<Contract> PhysicsEngine::createContracts()
 {
     std::vector<Contract> contracts;
@@ -144,7 +167,9 @@ std::vector<Contract> PhysicsEngine::createContracts()
     return contracts;
 }
 
-bool PhysicsEngine::resolveContracts(std::vector<Contract> contracts)
+/// @brief Moves physicsObjects around to resolve all the given contracts. Note that this may create new collisions.
+/// @param contracts 
+void PhysicsEngine::resolveContracts(std::vector<Contract> contracts)
 {
     for (int i = 0; i < (int)contracts.size(); i++)
     {
@@ -185,10 +210,20 @@ bool PhysicsEngine::resolveContracts(std::vector<Contract> contracts)
             // TODO: Add actual collisions between PhysicsObjects
         }
     }
-
-    return true;
 }
 
+/// @brief Frees all the physicsObjects in physicsEngine
+void PhysicsEngine::free()
+{
+    // Loop through physics objects and free them:
+    for (int i = 0; i < (int)mPhysicsObjects.size(); i++)
+    {
+        delete mPhysicsObjects[i];
+        mPhysicsObjects[i] = nullptr;
+    }
+}
+
+#pragma region getters & Setters
 void PhysicsEngine::setGravity(float gravity)
 {
     mGravity = gravity;
@@ -238,18 +273,10 @@ int PhysicsEngine::getLeftBound()
 {
     return mLeftBound;
 }
-
-void PhysicsEngine::free()
-{
-    // Loop through physics objects and free them:
-    for (int i = 0; i < (int)mPhysicsObjects.size(); i++)
-    {
-        delete mPhysicsObjects[i];
-        mPhysicsObjects[i] = nullptr;
-    }
-}
+#pragma endregion
 
 float getDistance(SDL_Point point1, SDL_Point point2)
 {
     return std::hypot(point1.x - point2.x, point1.y - point2.y);
 }
+

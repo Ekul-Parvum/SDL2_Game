@@ -13,6 +13,13 @@ TextureManager::~TextureManager()
     free();
 }
 
+/// @brief Loads image at the given path into an SDL_Texture, keeps a pointer to that 
+/// texture to manage, and returns pointer to that SDL_Texture
+/// @param renderer 
+/// @param path 
+/// @param keyColor 
+/// @param colorKeyFlag 
+/// @return returns pointer to the SDL_Texture it creates
 SDL_Texture* TextureManager::loadImageFromFile(SDL_Renderer* renderer, std::string path, SDL_Color keyColor, bool colorKeyFlag)
 {
     // The new texture we are making.
@@ -85,6 +92,7 @@ bool TextureManager::deleteTexture(SDL_Texture* texture)
     return false;
 }
 
+/// @brief Destroys all the SDL_Textures it has.
 void TextureManager::free()
 {
     printf("Freeing Textures\n");

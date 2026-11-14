@@ -123,6 +123,8 @@ int main(int argc, char* args[])
 }
 
 #pragma region functions
+/// @brief Initializes everything needed for the game to run
+/// @return True if everything initialized suceessfully - false otherwise
 bool initGame()
 {
     bool success = true;
@@ -147,6 +149,8 @@ bool initGame()
     return success;
 }
 
+/// @brief Initializes SDL2 stuff, including SDL_Window and SDL_Renderer
+/// @return True if everything initialized suceessfully - false otherwise
 bool initSDL2()
 {
      // Initialization flag
@@ -204,6 +208,7 @@ bool initSDL2()
     return success;
 }
 
+/// @brief Gives the physicsEngine all the values it needs to run
 void initPhysicsEngine()
 {
     physicsEngine.setGravity(0.05);
@@ -214,6 +219,7 @@ void initPhysicsEngine()
 
 }
 
+/// @brief Makes all the game objects - uses physicsEngine to give them their physics objects
 void makeGameObjects()
 {
     // Init gameobjects
@@ -223,6 +229,8 @@ void makeGameObjects()
     }
 }
 
+/// @brief Loads all the media into the objects they need to be in.
+/// @return True if everything loaded suceessfully - false otherwise
 bool loadMedia()
 {
     bool success = true;
@@ -270,6 +278,7 @@ bool loadMedia()
     return success;
 }
 
+/// @brief Frees memory
 void close()
 {
     // Free gameobject

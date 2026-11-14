@@ -16,6 +16,8 @@ Window::Window()
     mHeight = 0;
 }
 
+/// @brief Makes its SDL_Window
+/// @return Returns true if it was made successfuly, false otherwise
 bool Window::init()
 {
     //Create window
@@ -31,11 +33,15 @@ bool Window::init()
     return mWindow != NULL;
 }
 
+/// @brief Makes an SDL_Renderer from its own SDL_Window
+/// @return Returns that SDL_Renderer
 SDL_Renderer* Window::createRenderer()
 {
     return SDL_CreateRenderer( mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
 }
 
+/// @brief Handles window events, like resizing or clicking the x
+/// @param e 
 void Window::handleEvent( SDL_Event& e )
 {
     //Window event occured
@@ -123,6 +129,7 @@ void Window::handleEvent( SDL_Event& e )
     }
 }
 
+#pragma region getters & setters
 int Window::getWidth()
 {
     return mWidth;
@@ -147,7 +154,9 @@ bool Window::isMinimized()
 {
     return mMinimized;
 }
+#pragma endregion
 
+/// @brief Just destroys the SDL_Window
 void Window::free()
 {
     SDL_DestroyWindow(mWindow);

@@ -52,6 +52,7 @@ float PhysicsObject::getYVelocity()
     return mY_vel;
 }
 
+/// @brief Just moves physicsObject based on its velocity
 void PhysicsObject::applyVelocity()
 {
     moveCenterPos(mX_vel, mY_vel);

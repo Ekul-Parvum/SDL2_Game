@@ -46,7 +46,7 @@ namespace Ekul {
 
         std::vector<Contract> createContracts();
 
-        bool resolveContracts(std::vector<Contract> contracts);
+        void resolveContracts(std::vector<Contract> contracts);
 
         void setGravity(float gravity);
         float getGravity();

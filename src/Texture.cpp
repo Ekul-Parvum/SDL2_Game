@@ -16,6 +16,13 @@ Texture::~Texture()
     free();
 }
 
+/// @brief Loads given image
+/// @param renderer 
+/// @param textureManager The textureManager that will manage the SDL_Texture
+/// @param path 
+/// @param keyColor This color will be rendered as transparent
+/// @param colorKeyFlag If this is false, keyColor will do nothing
+/// @return Returns true if the image was loaded successfully, false otherwise
 bool Texture::loadFromFile(SDL_Renderer* renderer, TextureManager* textureManager, std::string path, SDL_Color keyColor, bool colorKeyFlag)
 {
     // Load new SDL_Texture
@@ -36,6 +43,12 @@ bool Texture::loadFromFile(SDL_Renderer* renderer, TextureManager* textureManage
 }
 
 #if defined(SDL_TTF_MAJOR_VERSION)
+/// @brief Creates and loads a texture that is the given text in the given font
+/// @param renderer 
+/// @param font 
+/// @param text 
+/// @param textColor 
+/// @return Returns true if the texture was loaded successfully, false otherwise
 bool Texture::loadFromRenderedText(SDL_Renderer* renderer, TTF_Font* font, std::string text, SDL_Color textColor) 
 {
     // If there was anything in this texture before, we need to get rid of it to load this new text texture
@@ -69,8 +82,18 @@ bool Texture::loadFromRenderedText(SDL_Renderer* renderer, TTF_Font* font, std::
 }
 #endif
 
+/// @brief Destroys the texture
 void Texture::free()
 {
+    /* 
+    TODO: Should this destroy the texture? Isn't that something TextureManager should do? Since
+    after this TextureManager would have a pointer to a destroyed texture. It doesn't matter right now,
+    since every Texture wrapper object has its own SDL_Texture, so nothing else would try to access
+    that dangling pointer, but it could be an issue.
+
+    Especialy since I should eventualy change this system. Everything haveing its own SDL_Texture is
+    too inefficient. Why should every zombie have itsown zombie texture if its all the same image?
+    */
     if (mTexture != NULL)
     {
         SDL_DestroyTexture(mTexture);
@@ -80,6 +103,17 @@ void Texture::free()
     }
 }
 
+/// @brief 
+/// This takes rgb, and will change the rgb values of each pixel in the texture 
+/// based on the ratio of the given rgb values and 255.
+///
+/// Example:
+///     If you gave (mTexture, 128, 255, 255), 128 is about half way to 255, so the red value 
+///     for each pixel in the texture would be halved. The g and b values are both 255, thus 
+///     they remain the same.
+/// @param red 
+/// @param green 
+/// @param blue 
 void Texture::setColor( Uint8 red, Uint8 green, Uint8 blue )
 {
     //Modulate texture
@@ -105,6 +139,13 @@ void Texture::setAlpha(Uint8 alpha)
     SDL_SetTextureAlphaMod(mTexture, alpha);
 }
 
+/// @brief Renders the texture to the renderer
+/// @param renderer 
+/// @param x 
+/// @param y 
+/// @param angle 
+/// @param center 
+/// @param flip 
 void Texture::render(SDL_Renderer* renderer, int x, int y, double angle, SDL_Point* center, SDL_RendererFlip flip)
 {
     // printf("Rendering at: (%d, %d), w:%d, h:%d\n", x, y, mWidth, mHeight);
@@ -130,6 +171,7 @@ void Texture::render(SDL_Renderer* renderer, int x, int y, double angle, SDL_Poi
     }
 }
 
+#pragma region getters & setters
 SDL_Rect Texture::getClip()
 {
     return mClip;
@@ -171,3 +213,4 @@ void Texture::forceSetHeight(int height)
 {
     mHeight = height;
 }
+#pragma endregion
