@@ -7,12 +7,12 @@ LDLIBS = -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
 all: test
 
 # -- -- -- --[ Linking everything together ]-- -- -- --
-test: main.o window.o texture.o physicsobject.o gameobject.o physicsengine.o texturemanager.o
-	$(CXX) ./obj/main.o ./obj/window.o ./obj/texture.o ./obj/physicsobject.o ./obj/gameobject.o ./obj/physicsengine.o ./obj/texturemanager.o $(LDLIBS) -o ./test.exe
+test: main.o window.o texture.o physicsobject.o gameobject.o physicsengine.o texturemanager.o timer.o
+	$(CXX) ./obj/main.o ./obj/window.o ./obj/texture.o ./obj/physicsobject.o ./obj/gameobject.o ./obj/physicsengine.o ./obj/texturemanager.o ./obj/timer.o $(LDLIBS) -o ./test.exe
 # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 # -/- -/- -/- -/-[  Making Object Files  ]-\- -\- -\- -\-
-main.o: ./src/main.cpp ./src/Global.h ./src/Window.h ./src/GameObject.h ./src/PhysicsEngine.h ./src/TextureManager.h
+main.o: ./src/main.cpp ./src/Global.h ./src/Window.h ./src/GameObject.h ./src/PhysicsEngine.h ./src/TextureManager.h ./src/Timer.h
 	$(CXX) $(CXXFLAGS) -c ./src/main.cpp -o ./obj/main.o
 
 window.o: ./src/Window.cpp ./src/Window.h ./src/Global.h
@@ -32,6 +32,9 @@ gameobject.o: ./src/GameObject.cpp ./src/GameObject.h ./src/PhysicsObject.h ./sr
 	
 texturemanager.o: ./src/TextureManager.cpp ./src/TextureManager.h
 	$(CXX) $(CXXFLAGS) -c ./src/TextureManager.cpp -o ./obj/texturemanager.o
+
+timer.o: ./src/Timer.cpp ./src/Timer.h
+	$(CXX) $(CXXFLAGS) -c ./src/Timer.cpp -o ./obj/Timer.o
 # -\- -\- -\- -\- -\- -\- -\- -/- -/- -/- -/- -/- -/- -/-
 
 clean:

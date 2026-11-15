@@ -23,6 +23,9 @@ namespace Constants {
     constexpr int SCREEN_WIDTH = 640; 
     constexpr int SCREEN_HEIGHT = 480;
 
+    constexpr int FPS_CAP = 60;
+    constexpr int MILLISECONDS_PER_FRAME = 1000.0 / (float)FPS_CAP;
+
     namespace FilePaths {
         // File paths to the images I care about:
         inline std::string derpySmilePath =                     "./media/Pictures/DerpySmile_x32scale.png";

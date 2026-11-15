@@ -20,6 +20,7 @@ Description: Trying to make a simple 2d game
 #include "GameObject.h"
 #include "PhysicsEngine.h"
 #include "TextureManager.h"
+#include "Timer.h"
 
 bool initGame();
 bool initSDL2();
@@ -53,11 +54,15 @@ int main(int argc, char* args[])
 
         // TODO: Add fps controll
 
+        Ekul::Timer fpsCapTimer;
+
         gameObject.setHeight(50);
         gameObject.setWidth(150);
 
         while (!quit)
         {
+            fpsCapTimer.start();
+
             // Clear screen:
             printf("\033[H\033[2J");
 
@@ -113,6 +118,14 @@ int main(int argc, char* args[])
 
                 // Present to window:
                 SDL_RenderPresent(Global::gRenderer);
+            }
+
+            // If we are still below the FPS cap, then wait a bit until starting the next frame:
+            int millisecondsPassedInThisFrame = fpsCapTimer.getTicks();
+            if (millisecondsPassedInThisFrame < Constants::MILLISECONDS_PER_FRAME)
+            {
+                // Wait until we hit the frame cap:
+                SDL_Delay(Constants::MILLISECONDS_PER_FRAME - millisecondsPassedInThisFrame);
             }
         }
     }
