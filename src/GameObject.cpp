@@ -64,17 +64,17 @@ float GameObject::getYVelocity()
     return mPhysicsObject->getYVelocity();
 }
 
-SDL_Point GameObject::getCenterPos()
+Point_f GameObject::getCenterPos()
 {
     return mPhysicsObject->getCenterPos();
 }
 
-void GameObject::setCenterPos(int x, int y)
+void GameObject::setCenterPos(float x, float y)
 {
     mPhysicsObject->setCenterPos(x, y);
 }
 
-void GameObject::moveCenterPos(int x_change, int y_change)
+void GameObject::moveCenterPos(float x_change, float y_change)
 {
     mPhysicsObject->moveCenterPos(x_change, y_change);
 }
@@ -118,8 +118,8 @@ void GameObject::setHeight(int height)
 
 void GameObject::render(SDL_Renderer* renderer)
 {
-    SDL_Point gameObjectPosition = mPhysicsObject->getCenterPos();
-    SDL_Point rectPos = {gameObjectPosition.x - mTexture.getWidth() / 2, gameObjectPosition.y - mTexture.getHeight() / 2};
+    Point_f gameObjectPosition = mPhysicsObject->getCenterPos();
+    SDL_Point rectPos = {(int)(gameObjectPosition.x - mTexture.getWidth() / 2.0f), (int)(gameObjectPosition.y - mTexture.getHeight() / 2.0f)};
 
     mTexture.render(renderer, rectPos.x, rectPos.y, mPhysicsObject->getAngle());
 }

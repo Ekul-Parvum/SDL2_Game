@@ -14,7 +14,7 @@ PhysicsObject::PhysicsObject()
     mY_vel = 0;
 }
 
-PhysicsObject::PhysicsObject(int x, int y, int width, int height, float angle)
+PhysicsObject::PhysicsObject(float x, float y, int width, int height, float angle)
 {
     mCenter = {x, y};
 
@@ -58,26 +58,26 @@ void PhysicsObject::applyVelocity()
     moveCenterPos(mX_vel, mY_vel);
 }
 
-SDL_Point PhysicsObject::getCenterPos()
+Point_f PhysicsObject::getCenterPos()
 {
     return mCenter;
 }
 
-void PhysicsObject::setCenterPos(int x, int y)
+void PhysicsObject::setCenterPos(float x, float y)
 {
     mCenter = {x, y};
 }
 
-void PhysicsObject::setCenterYPos(int y)
+void PhysicsObject::setCenterYPos(float y)
 {
     mCenter.y = y;
 }
-void PhysicsObject::setCenterXPos(int x)
+void PhysicsObject::setCenterXPos(float x)
 {
     mCenter.x = x;
 }
 
-void PhysicsObject::moveCenterPos(int x_change, int y_change)
+void PhysicsObject::moveCenterPos(float x_change, float y_change)
 {
     mCenter.x += x_change;
     mCenter.y += y_change;

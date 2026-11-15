@@ -33,7 +33,6 @@ Ekul::PhysicsEngine physicsEngine = Ekul::PhysicsEngine();
 
 Ekul::TextureManager textureManager = Ekul::TextureManager();
 
-Ekul::GameObject gameObject2 = Ekul::GameObject(&physicsEngine);
 Ekul::GameObject gameObject = Ekul::GameObject(&physicsEngine);
 
 std::vector<Ekul::GameObject*> gameObjects;
@@ -52,12 +51,10 @@ int main(int argc, char* args[])
 
         SDL_Event event;
 
-        // TODO: Add fps controll
-
         Ekul::Timer fpsCapTimer;
 
         gameObject.setHeight(50);
-        gameObject.setWidth(150);
+        gameObject.setWidth(70);
 
         while (!quit)
         {
@@ -75,6 +72,11 @@ int main(int argc, char* args[])
                     quit = true;
                 }
 
+                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_UP && !event.key.repeat)
+                {
+                    gameObject.setYVelocity(-5);
+                }
+
                 // Handle window events
                 Global::gWindow.handleEvent(event);
             }
@@ -90,14 +92,6 @@ int main(int argc, char* args[])
             {
                 gameObject.moveCenterPos(speed, 0);
             }
-            if (currentKeyStates[ SDL_SCANCODE_UP ])
-            {
-                gameObject.moveCenterPos(0, -speed);
-            }
-            if (currentKeyStates[ SDL_SCANCODE_DOWN ])
-            {
-                gameObject.moveCenterPos(0, speed);
-            }
 
             physicsEngine.applyVelocities();
 
@@ -109,7 +103,7 @@ int main(int argc, char* args[])
 
                 // Render:
                 gameObject.render(Global::gRenderer);
-                gameObject2.render(Global::gRenderer);
+                
 
                 for (int i = 0; i < (int)gameObjects.size(); i++)
                 {
@@ -236,7 +230,7 @@ void initPhysicsEngine()
 void makeGameObjects()
 {
     // Init gameobjects
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 5; i++)
     {
         gameObjects.push_back(new Ekul::GameObject(&physicsEngine));
     }
@@ -259,18 +253,7 @@ bool loadMedia()
         gameObject.setTextureClip({0, 0, 1, 1});
     }
 
-    // Load texture 
-    if (!gameObject2.loadImageFromFile(Global::gRenderer, &textureManager, Constants::FilePaths::plainColor))
-    {
-        printf("[Line %d] Couldn't load text to texture\n", __LINE__);
-        success = false;
-    }
-    else
-    {
-        gameObject2.setTextureClip({4, 0, 1, 1});
-        gameObject2.setWidth(500);
-        gameObject2.setHeight(10);
-    }
+    
 
     for (int i = 0; i < (int)gameObjects.size(); i++)
     {
@@ -282,9 +265,9 @@ bool loadMedia()
         else
         {
             gameObjects[i]->setTextureClip({3, 0, 1, 1});
-            gameObjects[i]->setWidth(10);
-            gameObjects[i]->setHeight(30);
-            gameObjects[i]->setCenterPos(100 + 60 * i, 100 + 60 * i);
+            gameObjects[i]->setWidth(30);
+            gameObjects[i]->setHeight(50);
+            gameObjects[i]->setCenterPos(100 + 120 * i, 100 + 90 * i);
         }
     }
 
@@ -296,8 +279,6 @@ void close()
 {
     // Free gameobject
     gameObject.free();
-    gameObject2.free();
-
     for (int i = 0; i < (int)gameObjects.size(); i++)
     {
         delete gameObjects[i];

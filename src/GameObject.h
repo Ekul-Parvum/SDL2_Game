@@ -50,11 +50,11 @@ namespace Ekul {
         float getYVelocity();
         
         // Get center point:
-        SDL_Point getCenterPos();
+        Point_f getCenterPos();
 
         // Change PhysicsObject position:
-        void setCenterPos(int x, int y);
-        void moveCenterPos(int x_change, int y_change);
+        void setCenterPos(float x, float y);
+        void moveCenterPos(float x_change, float y_change);
 
         // Rotate Object:
         void rotateAngle(float degrees);

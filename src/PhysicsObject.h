@@ -8,10 +8,14 @@
 #include <SDL2/SDL_mixer.h>
 
 namespace Ekul {
+    struct Point_f {
+        float x, y;
+    };
+
     class PhysicsObject {
         public:
         PhysicsObject();
-        PhysicsObject(int x, int y, int width, int height, float angle);
+        PhysicsObject(float x, float y, int width, int height, float angle);
 
         PhysicsObject(const PhysicsObject&) = default;
         
@@ -27,13 +31,13 @@ namespace Ekul {
         void applyVelocity();
         
         // Get center point:
-        SDL_Point getCenterPos();
+        Point_f getCenterPos();
 
         // Change PhysicsObject position:
-        void setCenterPos(int x, int y);
-        void setCenterYPos(int y);
-        void setCenterXPos(int x);
-        void moveCenterPos(int x_change, int y_change);
+        void setCenterPos(float x, float y);
+        void setCenterYPos(float y);
+        void setCenterXPos(float x);
+        void moveCenterPos(float x_change, float y_change);
 
         // Rotate Object:
         void rotateAngle(float degrees);
@@ -50,7 +54,7 @@ namespace Ekul {
 
 
         private:
-        SDL_Point mCenter;
+        Point_f mCenter;
 
         int mWidth;
         int mHeight;
