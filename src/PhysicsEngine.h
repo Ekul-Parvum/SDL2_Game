@@ -40,7 +40,8 @@ namespace Ekul {
 
         void applyVelocities();
 
-        bool isCollision(PhysicsObject* physicsObject1, PhysicsObject* physicsObject2);
+        bool isCollisionNoAngle(PhysicsObject* physicsObject1, PhysicsObject* physicsObject2);
+        bool isCollisionWithAngle(PhysicsObject* physicsObject1, PhysicsObject* physicsObject2);
 
         bool isCollisionWithBound(PhysicsObject* physicsObject);
 

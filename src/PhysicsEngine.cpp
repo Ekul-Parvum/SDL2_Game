@@ -1,4 +1,5 @@
 #include "PhysicsEngine.h"
+#include "Global.h"
 
 using namespace Ekul;
 
@@ -91,7 +92,7 @@ void PhysicsEngine::applyVelocities()
 /// @param physicsObject1 
 /// @param physicsObject2 
 /// @return Returns true if they are colliding, false otherwise
-bool PhysicsEngine::isCollision(PhysicsObject* physicsObject1, PhysicsObject* physicsObject2)
+bool PhysicsEngine::isCollisionNoAngle(PhysicsObject* physicsObject1, PhysicsObject* physicsObject2)
 {
     // TODO: Modify this to also consider the angle of the objects
 
@@ -122,9 +123,68 @@ bool PhysicsEngine::isCollision(PhysicsObject* physicsObject1, PhysicsObject* ph
     }
     else
     {
-        // printf("COLLISION\n");
+        printf("COLLISION NO ANGLE\n");
         return true;
     }
+}
+
+bool PhysicsEngine::isCollisionWithAngle(PhysicsObject* physicsObject1, PhysicsObject* physicsObject2)
+{
+    Point_f pos1 = physicsObject1->getCenterPos();
+    Point_f pos2 = physicsObject2->getCenterPos();
+
+    float halfWidth1  = physicsObject1->getWidth() / 2.0f;
+    float halfHeight1 = physicsObject1->getHeight() / 2.0f;
+
+    float halfWidth2  = physicsObject2->getWidth() / 2.0f;
+    float halfHeight2 = physicsObject2->getHeight() / 2.0f;
+
+    // Convert angles to radians
+    float angle1 = physicsObject1->getAngle() * Constants::PI / 180.0f;
+    float angle2 = physicsObject2->getAngle() * Constants::PI / 180.0f;
+
+    // Local axes for each rectangle
+    Point_f axes[4] = {
+        { cos(angle1), sin(angle1) },
+        { -sin(angle1), cos(angle1) },
+        { cos(angle2), sin(angle2) },
+        { -sin(angle2), cos(angle2) }
+    };
+
+    // Vector from object 1 to object 2
+    Point_f centerDiff = {
+        pos2.x - pos1.x,
+        pos2.y - pos1.y
+    };
+
+    // Check overlap on each axis
+    for (int i = 0; i < 4; i++)
+    {
+        Point_f axis = axes[i];
+
+        // Project center distance onto axis
+        float distance = fabs(
+            centerDiff.x * axis.x +
+            centerDiff.y * axis.y
+        );
+
+        // Calculate projection radius of rectangle 1
+        float radius1 =
+            halfWidth1 * fabs(cos(angle1) * axis.x + sin(angle1) * axis.y) +
+            halfHeight1 * fabs(-sin(angle1) * axis.x + cos(angle1) * axis.y);
+
+        // Calculate projection radius of rectangle 2
+        float radius2 =
+            halfWidth2 * fabs(cos(angle2) * axis.x + sin(angle2) * axis.y) +
+            halfHeight2 * fabs(-sin(angle2) * axis.x + cos(angle2) * axis.y);
+
+        // No overlap means no collision
+        if (distance >= radius1 + radius2)
+            return false;
+    }
+
+    printf("COLLISION WITH ANGLE\n");
+    return true;
 }
 
 /// @brief Tests if the given physicsObject is outside of physicsEngine's bounds
@@ -169,8 +229,10 @@ std::vector<Contract> PhysicsEngine::createContracts()
         // Which is just all the objects after i:
         for (int j = i + 1; j < (int)mPhysicsObjects.size(); j++)
         {
+            isCollisionWithAngle(mPhysicsObjects[i], mPhysicsObjects[j]);
+
             // If there is a collision between the i and j physicsObjects, create a contract between them
-            if (isCollision(mPhysicsObjects[i], mPhysicsObjects[j]))
+            if (isCollisionNoAngle(mPhysicsObjects[i], mPhysicsObjects[j]))
             {
                 // Create a contract:
                 contracts.push_back(Contract(mPhysicsObjects[i], mPhysicsObjects[j]));
