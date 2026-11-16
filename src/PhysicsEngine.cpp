@@ -88,7 +88,7 @@ void PhysicsEngine::applyVelocities()
     resolveContracts(contracts);
 }
 
-/// @brief Tests if two physicsObjects are colliding
+/// @brief Tests if two physicsObjects are colliding - But assumes they are both right side up/at angle 0
 /// @param physicsObject1 
 /// @param physicsObject2 
 /// @return Returns true if they are colliding, false otherwise
@@ -128,6 +128,12 @@ bool PhysicsEngine::isCollisionNoAngle(PhysicsObject* physicsObject1, PhysicsObj
     }
 }
 
+/// @brief Tests if two physicsObjects are colliding
+///
+///        - I have documentation/notes on this algorithm and math in my black notebook, pg57-59
+/// @param physicsObject1 
+/// @param physicsObject2 
+/// @return Returns true if they are colliding, false otherwise
 bool PhysicsEngine::isCollisionWithAngle(PhysicsObject* physicsObject1, PhysicsObject* physicsObject2)
 {
     Point_f pos1 = physicsObject1->getCenterPos();
