@@ -49,6 +49,10 @@ namespace Ekul {
 
         void resolveContracts(std::vector<Contract> contracts);
 
+        void resolveCollision(PhysicsObject* physicsObject1, PhysicsObject* physicsObject2);
+
+        void resolveBoundCollision(PhysicsObject* physicsObject1);
+
         void setGravity(float gravity);
         float getGravity();
 

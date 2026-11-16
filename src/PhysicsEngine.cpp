@@ -198,6 +198,8 @@ bool PhysicsEngine::isCollisionWithAngle(PhysicsObject* physicsObject1, PhysicsO
 /// @return Returns true if it is outside of bounds, false otherwise
 bool PhysicsEngine::isCollisionWithBound(PhysicsObject* physicsObject)
 {
+    // TODO: Modify this to work on physicsObjects at an angle
+
     Point_f     pos     = physicsObject->getCenterPos();
     int         width   = physicsObject->getWidth();
     int         height  = physicsObject->getHeight();
@@ -235,8 +237,6 @@ std::vector<Contract> PhysicsEngine::createContracts()
         // Which is just all the objects after i:
         for (int j = i + 1; j < (int)mPhysicsObjects.size(); j++)
         {
-            isCollisionWithAngle(mPhysicsObjects[i], mPhysicsObjects[j]);
-
             // If there is a collision between the i and j physicsObjects, create a contract between them
             if (isCollisionNoAngle(mPhysicsObjects[i], mPhysicsObjects[j]))
             {
@@ -257,84 +257,84 @@ void PhysicsEngine::resolveContracts(std::vector<Contract> contracts)
     {
         if (contracts[i].mIsBoundContract)
         {
-            PhysicsObject* physicsObject1 = contracts[i].mPhysicsObject1;
-            Point_f pos = physicsObject1->getCenterPos();
-            int height = physicsObject1->getHeight();
-            int width = physicsObject1->getWidth();
-
-            // Resolve lower bound collision:
-            if (pos.y + height / 2 > mLowerBound)
-            {
-                physicsObject1->setYVelocity(0);
-                physicsObject1->setCenterYPos(mLowerBound - physicsObject1->getHeight() / 2);
-            }
-            // Resolve upper bound collision:
-            if (pos.y - height / 2 < mUpperBound)
-            {
-                physicsObject1->setYVelocity(0);
-                physicsObject1->setCenterYPos(mUpperBound + height / 2);
-            }
-            // Resolve left bound collision:
-            if (pos.x - height / 2 < mLeftBound)
-            {
-                physicsObject1->setXVelocity(0);
-                physicsObject1->setCenterXPos(mLeftBound + height / 2);
-            }
-            // Resolve right bound collision:
-            if (pos.x + width / 2 > mRightBound)
-            {
-                physicsObject1->setXVelocity(0);
-                physicsObject1->setCenterXPos(mRightBound - width / 2);
-            }
+            resolveBoundCollision(contracts[i].mPhysicsObject1);
         }
         else
         {
-            // TODO: Modify this to work on physicsObjects that can be at an angle.
-
-            // Get the relevant info on the first physicsObject:
-            Point_f pos1    = contracts[i].mPhysicsObject1->getCenterPos();
-            int height1     = contracts[i].mPhysicsObject1->getHeight();
-            int width1      = contracts[i].mPhysicsObject1->getWidth();
-            
-            // And the second:
-            Point_f pos2    = contracts[i].mPhysicsObject2->getCenterPos();
-            int height2     = contracts[i].mPhysicsObject2->getHeight();
-            int width2      = contracts[i].mPhysicsObject2->getWidth();
-
-            float overlapX = (width1 + width2) / 2.0f - abs(pos1.x - pos2.x);
-            float overlapY = (height1 + height2) / 2.0f - abs(pos1.y - pos2.y);
-
-            Point_f movement = {0, 0};
-
-            if (overlapX < overlapY)
-            {
-                movement.x = (pos1.x < pos2.x) ? -overlapX / 2.0 : overlapX / 2.0;
-                contracts[i].mPhysicsObject1->setXVelocity(0);
-                contracts[i].mPhysicsObject2->setXVelocity(0);
-            }
-            else
-            {
-                movement.y = (pos1.y < pos2.y) ? -overlapY / 2.0 : overlapY / 2.0;
-                contracts[i].mPhysicsObject1->setYVelocity(0);
-                contracts[i].mPhysicsObject2->setYVelocity(0);
-            }
-
-            // if ((pos1.x < pos2.x && pos1.x + width1 > pos2.x + width2) || // If obj1's left & right bounds surround obj2
-            //     (pos2.x < pos1.x && pos2.x + width2 > pos1.x + width1))   // If obj2's left & right bounds surround obj1
-            // {
-            //     movement.x = 0;
-            // }
-
-            // if ((pos1.y < pos2.y && pos1.y + height1 > pos2.y + height2) || // If obj1's top & bottom bounds surround obj2
-            //     (pos2.y < pos1.y && pos2.y + height2 > pos1.y + height1))   // If obj2's top & bottom bounds surround obj1
-            // {
-            //     movement.y = 0;
-            // }
-
-            // Move the physicsObjects equaly along that normal:
-            contracts[i].mPhysicsObject1->moveCenterPos(movement.x, movement.y);
-            contracts[i].mPhysicsObject2->moveCenterPos(-movement.x, -movement.y);
+            resolveCollision(contracts[i].mPhysicsObject1, contracts[i].mPhysicsObject2);
         }
+    }
+}
+
+/// @brief Moves the two physicsObjects to resolve the collision between them
+/// @param physicsObject1 
+/// @param physicsObject2 
+void PhysicsEngine::resolveCollision(PhysicsObject* physicsObject1, PhysicsObject* physicsObject2)
+{
+    // TODO: Modify this to work on physicsObjects that can be at an angle.
+
+    // Get the relevant info on the first physicsObject:
+    Point_f pos1    = physicsObject1->getCenterPos();
+    int height1     = physicsObject1->getHeight();
+    int width1      = physicsObject1->getWidth();
+    
+    // And the second:
+    Point_f pos2    = physicsObject2->getCenterPos();
+    int height2     = physicsObject2->getHeight();
+    int width2      = physicsObject2->getWidth();
+
+    float overlapX = (width1 + width2) / 2.0f - abs(pos1.x - pos2.x);
+    float overlapY = (height1 + height2) / 2.0f - abs(pos1.y - pos2.y);
+
+    Point_f movement = {0, 0};
+
+    if (overlapX < overlapY)
+    {
+        movement.x = (pos1.x < pos2.x) ? -overlapX / 2.0 : overlapX / 2.0;
+        physicsObject1->setXVelocity(0);
+        physicsObject2->setXVelocity(0);
+    }
+    else
+    {
+        movement.y = (pos1.y < pos2.y) ? -overlapY / 2.0 : overlapY / 2.0;
+        physicsObject1->setYVelocity(0);
+        physicsObject2->setYVelocity(0);
+    }
+
+    // Move the physicsObjects equaly along that normal:
+    physicsObject1->moveCenterPos(movement.x, movement.y);
+    physicsObject2->moveCenterPos(-movement.x, -movement.y);
+}
+
+void PhysicsEngine::resolveBoundCollision(PhysicsObject* physicsObject1)
+{
+    Point_f pos = physicsObject1->getCenterPos();
+    int height = physicsObject1->getHeight();
+    int width = physicsObject1->getWidth();
+
+    // Resolve lower bound collision:
+    if (pos.y + height / 2 > mLowerBound)
+    {
+        physicsObject1->setYVelocity(0);
+        physicsObject1->setCenterYPos(mLowerBound - physicsObject1->getHeight() / 2);
+    }
+    // Resolve upper bound collision:
+    if (pos.y - height / 2 < mUpperBound)
+    {
+        physicsObject1->setYVelocity(0);
+        physicsObject1->setCenterYPos(mUpperBound + height / 2);
+    }
+    // Resolve left bound collision:
+    if (pos.x - height / 2 < mLeftBound)
+    {
+        physicsObject1->setXVelocity(0);
+        physicsObject1->setCenterXPos(mLeftBound + height / 2);
+    }
+    // Resolve right bound collision:
+    if (pos.x + width / 2 > mRightBound)
+    {
+        physicsObject1->setXVelocity(0);
+        physicsObject1->setCenterXPos(mRightBound - width / 2);
     }
 }
 
