@@ -74,23 +74,17 @@ bool PhysicsEngine::deletePhysicsObject(PhysicsObject* physicsObject)
 /// @brief Applies some velocities, like gravity, and then moves all the physicsObjects around based on their velocities
 void PhysicsEngine::applyVelocities()
 {
+    // Loop through physicsObjects, and apply velocities to them:
     for (int i = 0; i < (int)mPhysicsObjects.size(); i++)
     {
         mPhysicsObjects[i]->changeVelocity(0, mGravity);
 
         mPhysicsObjects[i]->applyVelocity();
+    }
 
-        
-    }
-    
-    int count = 0;
-    while (count < 5)
-    {
-        // Create and resolve contracts:
-        std::vector<Contract> contracts = createContracts();
-        resolveContracts(contracts);
-        count++;
-    }
+    // Create and resolve contracts:
+    std::vector<Contract> contracts = createContracts();
+    resolveContracts(contracts);
 }
 
 /// @brief Tests if two physicsObjects are colliding
@@ -99,6 +93,8 @@ void PhysicsEngine::applyVelocities()
 /// @return Returns true if they are colliding, false otherwise
 bool PhysicsEngine::isCollision(PhysicsObject* physicsObject1, PhysicsObject* physicsObject2)
 {
+    // TODO: Modify this to also consider the angle of the objects
+
     Point_f     pos1    = physicsObject1->getCenterPos();
     int         width1  = physicsObject1->getWidth();
     int         height1 = physicsObject1->getHeight();
@@ -165,7 +161,7 @@ std::vector<Contract> PhysicsEngine::createContracts()
         // If this object collides with one of the boundries, create a contract for that:
         if (isCollisionWithBound(mPhysicsObjects[i]))
         {
-            // Create bond contract:
+            // Create bound contract:
             contracts.push_back(Contract(mPhysicsObjects[i]));
         }
 
@@ -225,7 +221,7 @@ void PhysicsEngine::resolveContracts(std::vector<Contract> contracts)
         }
         else
         {
-            // TODO: Add actual collisions between PhysicsObjects
+            // TODO: Modify this to work on physicsObjects that can be at an angle.
 
             // Get the relevant info on the first physicsObject:
             Point_f pos1    = contracts[i].mPhysicsObject1->getCenterPos();

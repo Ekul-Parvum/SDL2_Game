@@ -72,10 +72,14 @@ int main(int argc, char* args[])
                     quit = true;
                 }
 
-                if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_UP && !event.key.repeat)
+                if (event.type == SDL_KEYDOWN)
                 {
-                    gameObject.setYVelocity(-5);
+                    // if (event.key.keysym.sym == SDLK_w && !event.key.repeat)
+                    // {
+                    //     gameObject.setYVelocity(-5);
+                    // }
                 }
+
 
                 // Handle window events
                 Global::gWindow.handleEvent(event);
@@ -84,13 +88,29 @@ int main(int argc, char* args[])
             // User input
             const Uint8* currentKeyStates = SDL_GetKeyboardState( NULL );
             const int speed = 5;
-            if (currentKeyStates[ SDL_SCANCODE_LEFT ])
+            if (currentKeyStates[ SDL_SCANCODE_A ])
             {
                 gameObject.moveCenterPos(-speed, 0);
             }
-            if (currentKeyStates[ SDL_SCANCODE_RIGHT ])
+            if (currentKeyStates[ SDL_SCANCODE_D ])
             {
                 gameObject.moveCenterPos(speed, 0);
+            }
+            if (currentKeyStates[ SDL_SCANCODE_W ])
+            {
+                gameObject.moveCenterPos(0, -speed);
+            }
+            if (currentKeyStates[ SDL_SCANCODE_S ])
+            {
+                gameObject.moveCenterPos(0, speed);
+            }
+            if (currentKeyStates[ SDL_SCANCODE_RIGHT ])
+            {
+                gameObject.rotateAngle(5);
+            }
+            if (currentKeyStates[ SDL_SCANCODE_LEFT ])
+            {
+                gameObject.rotateAngle(-5);
             }
 
             physicsEngine.applyVelocities();
@@ -218,7 +238,7 @@ bool initSDL2()
 /// @brief Gives the physicsEngine all the values it needs to run
 void initPhysicsEngine()
 {
-    physicsEngine.setGravity(0.05);
+    // physicsEngine.setGravity(0.05);
     physicsEngine.setLowerBound(Constants::SCREEN_HEIGHT);
     physicsEngine.setUpperBound(0);
     physicsEngine.setRightBound(Constants::SCREEN_WIDTH);
@@ -267,6 +287,7 @@ bool loadMedia()
             gameObjects[i]->setTextureClip({3, 0, 1, 1});
             gameObjects[i]->setWidth(30);
             gameObjects[i]->setHeight(50);
+            gameObjects[i]->rotateAngle(i * 45);
             gameObjects[i]->setCenterPos(100 + 120 * i, 100 + 90 * i);
         }
     }
